@@ -2,7 +2,7 @@
 
 Name:           python-networkx
 Version:        0.99
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        LGPLv2+
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Tue Mar 24 2009 Conrad Meyer <konrad@tylerc.org> - 0.99-3
 - Replace __python macros with direct python invocations.
 - Disable checks for now.
