@@ -1,11 +1,11 @@
 %{!?python_sitelib: %global python_sitelib %(python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           python-networkx
-Version:        0.99
-Release:        4%{?dist}
+Version:        1.0.1
+Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
-License:        LGPLv2+
+License:        BSD
 URL:            https://networkx.lanl.gov/trac
 Source0:        http://networkx.lanl.gov/download/networkx/networkx-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -61,11 +61,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc doc/GNU_LGPL.txt installed-docs/*
+%doc LICENSE.txt installed-docs/*
 %{python_sitelib}/*
 
 
 %changelog
+* Wed Jan 20 2010 Conrad Meyer <konrad@tylerc.org> - 1.0.1-1
+- Bump version to 1.0.1.
+
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
