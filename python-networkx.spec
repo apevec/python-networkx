@@ -68,6 +68,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Wed Jan 20 2010 Conrad Meyer <konrad@tylerc.org> - 1.0.1-1
 - Bump version to 1.0.1.
+- License changed LGPLv2+ -> BSD.
 
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
