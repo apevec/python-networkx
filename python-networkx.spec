@@ -61,7 +61,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE.txt installed-docs/*
+%doc installed-docs/*
 %{python_sitelib}/*
 
 
