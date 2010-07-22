@@ -2,7 +2,7 @@
 
 Name:           python-networkx
 Version:        1.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        BSD
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 22 2010 David Malcolm <dmalcolm@redhat.com> - 1.0.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
+
 * Wed Jan 20 2010 Conrad Meyer <konrad@tylerc.org> - 1.0.1-1
 - Bump version to 1.0.1.
 - License changed LGPLv2+ -> BSD.
