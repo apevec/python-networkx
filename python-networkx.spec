@@ -1,62 +1,90 @@
-%{!?python_sitelib: %global python_sitelib %(python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-
 Name:           python-networkx
-Version:        1.0.1
-Release:        3%{?dist}
+Version:        1.4
+Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        BSD
-URL:            https://networkx.lanl.gov/trac
-Source0:        http://networkx.lanl.gov/download/networkx/networkx-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+URL:            http://networkx.lanl.gov/
+Source0:        http://pypi.python.org/packages/source/n/networkx/networkx-%{version}.tar.gz
 BuildArch:      noarch
 
 BuildRequires:  graphviz-python
 BuildRequires:  pydot
 BuildRequires:  pyparsing
-BuildRequires:  python-devel
+BuildRequires:  python3-pyparsing
+BuildRequires:  python2-devel
+BuildRequires:  python3-devel
 BuildRequires:  python-matplotlib
 BuildRequires:  PyYAML
 BuildRequires:  scipy
 Requires:       graphviz-python
 Requires:       ipython
-Requires:       numpy
 Requires:       pydot
-Requires:       python-matplotlib
 Requires:       PyYAML
 Requires:       scipy
 
 
 %description
-NetworkX is a Python package for the creation, manipulation, and
+NetworkX is a Python 2 package for the creation, manipulation, and
+study of the structure, dynamics, and functions of complex networks.
+
+
+%package -n python3-networkx
+Summary:        Creates and Manipulates Graphs and Networks
+Group:          Development/Languages
+
+
+%description -n python3-networkx
+NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
 
 %prep
 %setup -q -n networkx-%{version}
-chmod -x examples/*/*.py
-chmod -x examples/*/*.bz2
-sed -i '1,1d' networkx/tests/test.py
+
+# Fix permissions
+find examples -type f -perm /0111 | xargs chmod a-x
+
+# Fix line endings
+sed -e 's/\r//' examples/algorithms/hartford_drug.edgelist > hartford
+touch -r examples/algorithms/hartford_drug.edgelist hartford
+mv -f hartford examples/algorithms/hartford_drug.edgelist
 
 
 %build
 python setup.py build
 
+# Setup for python3
+mv build build2
+mv networkx/*.pyc build2
+
+# Build for python3
+python3 setup.py build
+
 
 %install
-rm -rf $RPM_BUILD_ROOT
+# Install the python3 version
+python3 setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+
+# Setup for python2
+mv build build3
+mv build2 build
+mv -f build/*.pyc networkx
+
+# Install the python2 version
 python setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 mv $RPM_BUILD_ROOT%{_docdir}/networkx-%{version} ./installed-docs
+rm -f installed-docs/INSTALL.txt
+
+# Fix permissions
+grep -FRl /usr/bin/env $RPM_BUILD_ROOT%{python_sitelib} | xargs chmod a+x
+grep -FRl /usr/bin/env $RPM_BUILD_ROOT%{python3_sitelib} | xargs chmod a+x
 
  
 %check
-# Tests don't pass for a variety of reasons; among them it looks
-# like they try to use Gtk which is obviously not available.
-#python -c "import networkx; networkx.test()"
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+mkdir site-packages
+mv networkx site-packages
+PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %files
@@ -65,7 +93,18 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/*
 
 
+%files -n python3-networkx
+%defattr(-,root,root,-)
+%doc installed-docs/*
+%{python3_sitelib}/*
+
+
 %changelog
+* Sat Apr 23 2011 Jerry James <loganjerry@gmail.com> - 1.4-1
+- New upstream version
+- Build for both python2 and python3
+- Drop BuildRoot, clean script, and clean at start of install script
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
