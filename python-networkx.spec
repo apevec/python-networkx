@@ -1,5 +1,5 @@
 Name:           python-networkx
-Version:        1.4
+Version:        1.5
 Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
@@ -8,6 +8,7 @@ URL:            http://networkx.lanl.gov/
 Source0:        http://pypi.python.org/packages/source/n/networkx/networkx-%{version}.tar.gz
 BuildArch:      noarch
 
+BuildRequires:  gdal-python
 BuildRequires:  graphviz-python
 BuildRequires:  pydot
 BuildRequires:  pyparsing
@@ -15,11 +16,16 @@ BuildRequires:  python3-pyparsing
 BuildRequires:  python2-devel
 BuildRequires:  python3-devel
 BuildRequires:  python-matplotlib
+BuildRequires:  python-nose
+BuildRequires:  python-sphinx
 BuildRequires:  PyYAML
+BuildRequires:  python3-PyYAML
 BuildRequires:  scipy
+Requires:       gdal-python
 Requires:       graphviz-python
 Requires:       ipython
 Requires:       pydot
+Requires:       pyparsing
 Requires:       PyYAML
 Requires:       scipy
 
@@ -32,11 +38,23 @@ study of the structure, dynamics, and functions of complex networks.
 %package -n python3-networkx
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
+Requires:       python3-pyparsing
+Requires:       python3-PyYAML
 
 
 %description -n python3-networkx
 NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
+
+
+%package doc
+Summary:        Documentation for networkx
+Group:          Documentation
+Requires:       %{name} = %{version}-%{release}
+
+
+%description doc
+Documentation for networkx
 
 
 %prep
@@ -53,6 +71,7 @@ mv -f hartford examples/algorithms/hartford_drug.edgelist
 
 %build
 python setup.py build
+PYTHONPATH=`pwd`/build/lib make -C doc html
 
 # Setup for python3
 mv build build2
@@ -80,6 +99,10 @@ rm -f installed-docs/INSTALL.txt
 grep -FRl /usr/bin/env $RPM_BUILD_ROOT%{python_sitelib} | xargs chmod a+x
 grep -FRl /usr/bin/env $RPM_BUILD_ROOT%{python3_sitelib} | xargs chmod a+x
 
+# Except unfix the one where the shebang was muffed
+chmod a-x $RPM_BUILD_ROOT%{python_sitelib}/networkx/algorithms/link_analysis/hits_alg.py
+chmod a-x $RPM_BUILD_ROOT%{python3_sitelib}/networkx/algorithms/link_analysis/hits_alg.py
+
  
 %check
 mkdir site-packages
@@ -88,18 +111,25 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %files
-%defattr(-,root,root,-)
 %doc installed-docs/*
 %{python_sitelib}/*
 
 
 %files -n python3-networkx
-%defattr(-,root,root,-)
 %doc installed-docs/*
 %{python3_sitelib}/*
 
 
+%files doc
+%doc doc/build/html/*
+
+
 %changelog
+* Wed Jun 22 2011 Jerry James <loganjerry@gmail.com> - 1.5-1
+- New upstream version
+- Drop defattr
+- Build documentation
+
 * Sat Apr 23 2011 Jerry James <loganjerry@gmail.com> - 1.4-1
 - New upstream version
 - Build for both python2 and python3
