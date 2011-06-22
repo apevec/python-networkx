@@ -21,6 +21,7 @@ BuildRequires:  python-sphinx
 BuildRequires:  PyYAML
 BuildRequires:  python3-PyYAML
 BuildRequires:  scipy
+BuildRequires:  tex(latex)
 Requires:       gdal-python
 Requires:       graphviz-python
 Requires:       ipython
