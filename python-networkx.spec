@@ -1,32 +1,35 @@
 Name:           python-networkx
-Version:        1.5
+Version:        1.6
 Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        BSD
 URL:            http://networkx.lanl.gov/
 Source0:        http://pypi.python.org/packages/source/n/networkx/networkx-%{version}.tar.gz
+Source1:        http://networkx.lanl.gov/networkx_reference.pdf
+Source2:        http://networkx.lanl.gov/networkx_tutorial.pdf
+Source3:        http://networkx.lanl.gov/networkx-documentation.zip
 BuildArch:      noarch
 
 BuildRequires:  gdal-python
 BuildRequires:  graphviz-python
 BuildRequires:  pydot
-BuildRequires:  pyparsing
-BuildRequires:  python3-pyparsing
+BuildRequires:  pyparsing, python3-pyparsing
 BuildRequires:  python2-devel
 BuildRequires:  python3-devel
+BuildRequires:  python-decorator, python3-decorator
 BuildRequires:  python-matplotlib
 BuildRequires:  python-nose
 BuildRequires:  python-sphinx
-BuildRequires:  PyYAML
-BuildRequires:  python3-PyYAML
-BuildRequires:  scipy
+BuildRequires:  PyYAML, python3-PyYAML
+BuildRequires:  scipy, python3-scipy
 BuildRequires:  tex(latex)
+
 Requires:       gdal-python
 Requires:       graphviz-python
-Requires:       ipython
 Requires:       pydot
 Requires:       pyparsing
+Requires:       python-decorator
 Requires:       PyYAML
 Requires:       scipy
 
@@ -39,8 +42,10 @@ study of the structure, dynamics, and functions of complex networks.
 %package -n python3-networkx
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
+Requires:       python3-decorator
 Requires:       python3-pyparsing
 Requires:       python3-PyYAML
+Requires:       python3-scipy
 
 
 %description -n python3-networkx
@@ -64,11 +69,22 @@ Documentation for networkx
 # Fix permissions
 find examples -type f -perm /0111 | xargs chmod a-x
 
-# Fix line endings
-sed -e 's/\r//' examples/algorithms/hartford_drug.edgelist > hartford
-touch -r examples/algorithms/hartford_drug.edgelist hartford
-mv -f hartford examples/algorithms/hartford_drug.edgelist
+# Overwrite the 0-length doc files with the real doc files
+cp -pf %{SOURCE1} %{SOURCE2} %{SOURCE3} doc/source
 
+# Use the system python-decorator instead of the bundled version
+sed -i '/          "networkx\.external.*",/d' setup.py
+cd networkx
+rm -fr external
+sed "/import networkx\.external/d" __init__.py > init.py
+touch -r __init__.py init.py
+mv -f init.py __init__.py
+for f in utils/decorators.py utils/misc.py; do
+  sed "s/networkx\.external\.//" $f > fixed.py
+  touch -r $f fixed.py
+  mv -f fixed.py $f
+done
+cd ..
 
 %build
 python setup.py build
@@ -104,6 +120,10 @@ grep -FRl /usr/bin/env $RPM_BUILD_ROOT%{python3_sitelib} | xargs chmod a+x
 chmod a-x $RPM_BUILD_ROOT%{python_sitelib}/networkx/algorithms/link_analysis/hits_alg.py
 chmod a-x $RPM_BUILD_ROOT%{python3_sitelib}/networkx/algorithms/link_analysis/hits_alg.py
 
+
+%clean
+rm -f /tmp/tmp??????
+
  
 %check
 mkdir site-packages
@@ -126,6 +146,12 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Mon Nov 28 2011 Jerry James <loganjerry@gmail.com> - 1.6-1
+- New upstream version
+- Do not use bundled python-decorator
+- Remove Requires: ipython, needed by one example only
+- Clean junk files left in /tmp
+
 * Wed Jun 22 2011 Jerry James <loganjerry@gmail.com> - 1.5-1
 - New upstream version
 - Drop defattr
