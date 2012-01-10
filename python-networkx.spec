@@ -1,6 +1,6 @@
 Name:           python-networkx
 Version:        1.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        BSD
@@ -146,6 +146,9 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Tue Jan 10 2012 Jerry James <loganjerry@gmail.com> - 1.6-2
+- Mass rebuild for Fedora 17
+
 * Mon Nov 28 2011 Jerry James <loganjerry@gmail.com> - 1.6-1
 - New upstream version
 - Do not use bundled python-decorator
