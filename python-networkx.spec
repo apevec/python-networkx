@@ -1,6 +1,6 @@
 Name:           python-networkx
-Version:        1.6
-Release:        3%{?dist}
+Version:        1.7
+Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        BSD
@@ -87,7 +87,7 @@ done
 cd ..
 
 %build
-python setup.py build
+python2 setup.py build
 PYTHONPATH=`pwd`/build/lib make -C doc html
 
 # Setup for python3
@@ -108,16 +108,27 @@ mv build2 build
 mv -f build/*.pyc networkx
 
 # Install the python2 version
-python setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+python2 setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 mv $RPM_BUILD_ROOT%{_docdir}/networkx-%{version} ./installed-docs
 rm -f installed-docs/INSTALL.txt
 
-# Fix permissions
-grep -FRl /usr/bin/env $RPM_BUILD_ROOT%{python_sitelib} | xargs chmod a+x
-grep -FRl /usr/bin/env $RPM_BUILD_ROOT%{python3_sitelib} | xargs chmod a+x
+# Fix permissions and binary paths
+for f in `grep -FRl /usr/bin/env $RPM_BUILD_ROOT%{python2_sitelib}`; do
+  sed 's|/usr/bin/env python|%{_bindir}/python2|' $f > $f.new
+  touch -r $f $f.new
+  chmod a+x $f.new
+  mv -f $f.new $f
+done
+
+for f in `grep -FRl /usr/bin/env $RPM_BUILD_ROOT%{python3_sitelib}`; do
+  sed 's|/usr/bin/env python|%{_bindir}/python3|' $f > $f.new
+  touch -r $f $f.new
+  chmod a+x $f.new
+  mv -f $f.new $f
+done
 
 # Except unfix the one where the shebang was muffed
-chmod a-x $RPM_BUILD_ROOT%{python_sitelib}/networkx/algorithms/link_analysis/hits_alg.py
+chmod a-x $RPM_BUILD_ROOT%{python2_sitelib}/networkx/algorithms/link_analysis/hits_alg.py
 chmod a-x $RPM_BUILD_ROOT%{python3_sitelib}/networkx/algorithms/link_analysis/hits_alg.py
 
 
@@ -133,7 +144,7 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 %files
 %doc installed-docs/*
-%{python_sitelib}/*
+%{python2_sitelib}/*
 
 
 %files -n python3-networkx
@@ -146,6 +157,9 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Mon Aug  6 2012 Jerry James <loganjerry@gmail.com> - 1.7-1
+- New upstream version
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
