@@ -1,6 +1,6 @@
 Name:           python-networkx
-Version:        1.7
-Release:        2%{?dist}
+Version:        1.8
+Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        BSD
@@ -24,6 +24,7 @@ BuildRequires:  python-sphinx
 BuildRequires:  PyYAML, python3-PyYAML
 BuildRequires:  scipy, python3-scipy
 BuildRequires:  tex(latex)
+BuildRequires:  tex-preview
 
 Requires:       gdal-python
 Requires:       graphviz-python
@@ -73,7 +74,9 @@ find examples -type f -perm /0111 | xargs chmod a-x
 cp -pf %{SOURCE1} %{SOURCE2} %{SOURCE3} doc/source
 
 # Use the system python-decorator instead of the bundled version
-sed -i '/          "networkx\.external.*",/d' setup.py
+sed -e '/          "networkx\.external.*",/d' \
+    -e "/sys\.version >= '3'/,/^$/d" \
+    -i setup.py
 cd networkx
 rm -fr external
 sed "/import networkx\.external/d" __init__.py > init.py
@@ -127,10 +130,6 @@ for f in `grep -FRl /usr/bin/env $RPM_BUILD_ROOT%{python3_sitelib}`; do
   mv -f $f.new $f
 done
 
-# Except unfix the one where the shebang was muffed
-chmod a-x $RPM_BUILD_ROOT%{python2_sitelib}/networkx/algorithms/link_analysis/hits_alg.py
-chmod a-x $RPM_BUILD_ROOT%{python3_sitelib}/networkx/algorithms/link_analysis/hits_alg.py
-
 
 %clean
 rm -f /tmp/tmp??????
@@ -157,6 +156,10 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Mon Jul 29 2013 Jerry James <loganjerry@gmail.com> - 1.8-1
+- New upstream version
+- Add tex-preview BR for documentation
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
