@@ -1,5 +1,5 @@
 Name:           python-networkx
-Version:        1.8
+Version:        1.8.1
 Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
@@ -91,7 +91,7 @@ cd ..
 
 %build
 python2 setup.py build
-PYTHONPATH=`pwd`/build/lib make -C doc html
+PYTHONPATH=$PWD/build/lib make -C doc html
 
 # Setup for python3
 mv build build2
@@ -156,6 +156,9 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Fri Aug  9 2013 Jerry James <loganjerry@gmail.com> - 1.8.1-1
+- New upstream version
+
 * Mon Jul 29 2013 Jerry James <loganjerry@gmail.com> - 1.8-1
 - New upstream version
 - Add tex-preview BR for documentation
