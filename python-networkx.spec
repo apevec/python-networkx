@@ -1,14 +1,14 @@
 Name:           python-networkx
 Version:        1.8.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        BSD
-URL:            http://networkx.lanl.gov/
-Source0:        http://pypi.python.org/packages/source/n/networkx/networkx-%{version}.tar.gz
-Source1:        http://networkx.lanl.gov/networkx_reference.pdf
-Source2:        http://networkx.lanl.gov/networkx_tutorial.pdf
-Source3:        http://networkx.lanl.gov/networkx-documentation.zip
+URL:            http://networkx.github.io/
+Source0:        https://pypi.python.org/packages/source/n/networkx/networkx-%{version}.tar.gz
+Source1:        http://networkx.github.io/documentation/latest/_downloads/networkx_reference.pdf
+Source2:        http://networkx.github.io/documentation/latest/_downloads/networkx_tutorial.pdf
+Source3:        http://networkx.github.io/documentation/latest/_downloads/networkx-documentation.zip
 BuildArch:      noarch
 
 BuildRequires:  gdal-python
@@ -156,6 +156,9 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Thu Oct  3 2013 Jerry James <loganjerry@gmail.com> - 1.8.1-2
+- Update project and source URLs
+
 * Fri Aug  9 2013 Jerry James <loganjerry@gmail.com> - 1.8.1-1
 - New upstream version
 
