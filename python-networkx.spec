@@ -1,6 +1,17 @@
+%if 0%{?fedora} > 12
+%global with_python3 1
+%endif
+
+# see https://fedoraproject.org/wiki/Packaging:Python#Macros
+%if 0%{?rhel} && 0%{?rhel} <= 6
+%{!?__python2: %global __python2 /usr/bin/python2}
+%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
+%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
+%endif
+
 Name:           python-networkx
 Version:        1.8.1
-Release:        2%{?dist}
+Release:        12%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        BSD
@@ -9,55 +20,142 @@ Source0:        https://pypi.python.org/packages/source/n/networkx/networkx-%{ve
 Source1:        http://networkx.github.io/documentation/latest/_downloads/networkx_reference.pdf
 Source2:        http://networkx.github.io/documentation/latest/_downloads/networkx_tutorial.pdf
 Source3:        http://networkx.github.io/documentation/latest/_downloads/networkx-documentation.zip
+Patch0:         optional-modules.patch
 BuildArch:      noarch
 
-BuildRequires:  gdal-python
-BuildRequires:  graphviz-python
-BuildRequires:  pydot
-BuildRequires:  pyparsing, python3-pyparsing
-BuildRequires:  python2-devel
-BuildRequires:  python3-devel
-BuildRequires:  python-decorator, python3-decorator
-BuildRequires:  python-matplotlib
-BuildRequires:  python-nose
-BuildRequires:  python-sphinx
-BuildRequires:  PyYAML, python3-PyYAML
-BuildRequires:  scipy, python3-scipy
-BuildRequires:  tex(latex)
-BuildRequires:  tex-preview
-
-Requires:       gdal-python
-Requires:       graphviz-python
-Requires:       pydot
-Requires:       pyparsing
-Requires:       python-decorator
-Requires:       PyYAML
-Requires:       scipy
-
+Requires:       %{name}-core = %{version}-%{release}
+%if !0%{?rhel}
+Requires:       %{name}-geo = %{version}-%{release}
+Requires:       %{name}-drawing = %{version}-%{release}
+%endif
 
 %description
 NetworkX is a Python 2 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
+%package core
+Summary:        Creates and Manipulates Graphs and Networks
+BuildRequires:  python2-devel
+BuildRequires:  python-decorator
+BuildRequires:  PyYAML
+BuildRequires:  scipy
+BuildRequires:  pyparsing
+BuildRequires:  python-nose
+Requires:       python-decorator
+Requires:       PyYAML
+Requires:       scipy
+Requires:       pyparsing
 
+%description core
+NetworkX is a Python 2 package for the creation, manipulation, and
+study of the structure, dynamics, and functions of complex networks.
+
+
+%if !0%{?rhel}
+
+%package geo
+Summary:        GDAL I/O
+Requires:       %{name}-core = %{version}-%{release}
+BuildRequires:  gdal-python
+Requires:       gdal-python
+
+%description geo
+NetworkX is a Python 3 package for the creation, manipulation, and
+study of the structure, dynamics, and functions of complex networks.
+
+This package provides GDAL I/O support.
+
+
+%package drawing
+Summary:        visual representations for graphs and networks
+Requires:       %{name}-core = %{version}-%{release}
+BuildRequires:  graphviz-python
+BuildRequires:  pydot
+Requires:       graphviz-python
+Requires:       pydot
+Requires:       python-matplotlib
+
+%description drawing
+NetworkX is a Python 3 package for the creation, manipulation, and
+study of the structure, dynamics, and functions of complex networks.
+
+This package provides support for graph visualizations.
+
+%endif
+
+
+%if 0%{?with_python3}
 %package -n python3-networkx
 Summary:        Creates and Manipulates Graphs and Networks
-Group:          Development/Languages
-Requires:       python3-decorator
-Requires:       python3-pyparsing
-Requires:       python3-PyYAML
-Requires:       python3-scipy
-
+Requires:       python3-networkx-core = %{version}-%{release}
+Requires:       python3-networkx-geo = %{version}-%{release}
+Requires:       python3-networkx-drawing = %{version}-%{release}
 
 %description -n python3-networkx
 NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
+%package -n python3-networkx-core
+Summary:        Creates and Manipulates Graphs and Networks
+BuildRequires:  python3-devel
+BuildRequires:  python3-decorator
+BuildRequires:  python3-PyYAML
+BuildRequires:  python3-scipy
+BuildRequires:  python3-pyparsing
+Requires:       python3-decorator
+Requires:       python3-PyYAML
+Requires:       python3-scipy
+Requires:       python3-pyparsing
+
+%description -n python3-networkx-core
+NetworkX is a Python 3 package for the creation, manipulation, and
+study of the structure, dynamics, and functions of complex networks.
+
+%if !0%{?rhel}
+%package -n python3-networkx-geo
+Summary:        GDAL I/O
+Requires:       python3-networkx-core = %{version}-%{release}
+BuildRequires:  gdal-python
+Requires:       gdal-python
+
+%description -n python3-networkx-geo
+NetworkX is a Python 3 package for the creation, manipulation, and
+study of the structure, dynamics, and functions of complex networks.
+
+This package provides GDAL I/O support.
+
+%package -n python3-networkx-drawing
+Summary:        visual representations for graphs and networks
+Requires:       python3-networkx-core = %{version}-%{release}
+BuildRequires:  graphviz-python
+BuildRequires:  pydot
+BuildRequires:  python3-matplotlib
+Requires:       graphviz-python
+Requires:       pydot
+Requires:       python3-matplotlib
+
+%description -n python3-networkx-drawing
+NetworkX is a Python 3 package for the creation, manipulation, and
+study of the structure, dynamics, and functions of complex networks.
+
+This package provides support for graph visualizations.
+%endif
+
+%endif
+
 
 %package doc
 Summary:        Documentation for networkx
 Group:          Documentation
-Requires:       %{name} = %{version}-%{release}
+
+%if 0%{?rhel} == 6
+BuildRequires:  python-sphinx10
+%else
+BuildRequires:  python-sphinx
+%endif
+BuildRequires:  tex(latex)
+BuildRequires:  tex-preview
+BuildRequires:  python-matplotlib
 
 
 %description doc
@@ -66,6 +164,7 @@ Documentation for networkx
 
 %prep
 %setup -q -n networkx-%{version}
+%patch0 -p1
 
 # Fix permissions
 find examples -type f -perm /0111 | xargs chmod a-x
@@ -91,17 +190,23 @@ cd ..
 
 %build
 python2 setup.py build
+%if 0%{?rhel} == 6
+PYTHONPATH=$PWD/build/lib make SPHINXBUILD=sphinx-1.0-build -C doc html
+%else
 PYTHONPATH=$PWD/build/lib make -C doc html
+%endif
 
+%if 0%{?with_python3}
 # Setup for python3
 mv build build2
 mv networkx/*.pyc build2
 
 # Build for python3
 python3 setup.py build
-
+%endif
 
 %install
+%if 0%{?with_python3}
 # Install the python3 version
 python3 setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 
@@ -109,6 +214,7 @@ python3 setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
 mv build build3
 mv build2 build
 mv -f build/*.pyc networkx
+%endif
 
 # Install the python2 version
 python2 setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
@@ -123,32 +229,60 @@ for f in `grep -FRl /usr/bin/env $RPM_BUILD_ROOT%{python2_sitelib}`; do
   mv -f $f.new $f
 done
 
+%if 0%{?with_python3}
 for f in `grep -FRl /usr/bin/env $RPM_BUILD_ROOT%{python3_sitelib}`; do
   sed 's|/usr/bin/env python|%{_bindir}/python3|' $f > $f.new
   touch -r $f $f.new
   chmod a+x $f.new
   mv -f $f.new $f
 done
-
+%endif
 
 %clean
 rm -f /tmp/tmp??????
 
- 
 %check
 mkdir site-packages
 mv networkx site-packages
 PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
-
 %files
+%doc README.txt LICENSE.txt
+
+%files core
 %doc installed-docs/*
 %{python2_sitelib}/*
+%exclude %{python2_sitelib}/networkx/drawing/
+%exclude %{python2_sitelib}/network/readwrite/nx_shp.py
 
 
+%if !0%{?rhel}
+%files drawing
+%{python2_sitelib}/networkx/drawing
+
+%files geo
+%{python2_sitelib}/network/readwrite/nx_shp.py
+%endif
+
+%if 0%{?with_python3}
 %files -n python3-networkx
+%doc README.txt LICENSE.txt
+
+%files -n python3-networkx-core
 %doc installed-docs/*
 %{python3_sitelib}/*
+%exclude %{python3_sitelib}/networkx/drawing/
+%exclude %{python3_sitelib}/network/readwrite/nx_shp.py
+
+
+%if !0%{?rhel}
+%files -n python3-networkx-drawing
+%{python2_sitelib}/networkx/drawing
+
+%files -n python3-networkx-geo
+%{python3_sitelib}/network/readwrite/nx_shp.py
+%endif
+%endif
 
 
 %files doc
@@ -156,6 +290,9 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Thu Mar 13 2014 Pádraig Brady <pbrady@redhat.com> - 1.8.1-12
+- Split to subpackages and support EL6 and EL7
+
 * Thu Oct  3 2013 Jerry James <loganjerry@gmail.com> - 1.8.1-2
 - Update project and source URLs
 
