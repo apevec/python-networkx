@@ -21,6 +21,7 @@ Source1:        http://networkx.github.io/documentation/latest/_downloads/networ
 Source2:        http://networkx.github.io/documentation/latest/_downloads/networkx_tutorial.pdf
 Source3:        http://networkx.github.io/documentation/latest/_downloads/networkx-documentation.zip
 Patch0:         optional-modules.patch
+Patch1:         test-rounding-fix.patch
 BuildArch:      noarch
 
 Requires:       %{name}-core = %{version}-%{release}
@@ -165,6 +166,7 @@ Documentation for networkx
 %prep
 %setup -q -n networkx-%{version}
 %patch0 -p1
+%patch1 -p1
 
 # Fix permissions
 find examples -type f -perm /0111 | xargs chmod a-x

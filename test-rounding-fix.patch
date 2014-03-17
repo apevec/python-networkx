@@ -1,0 +1,14 @@
+This was seen intermittently
+
+diff -Naur networkx-1.8.1.orig/networkx/algorithms/assortativity/correlation.py networkx-1.8.1/networkx/algorithms/assortativity/correlation.py
+--- networkx-1.8.1.orig/networkx/algorithms/assortativity/correlation.py	2013-08-04 13:53:31.000000000 +0000
++++ networkx-1.8.1/networkx/algorithms/assortativity/correlation.py	2014-03-17 11:11:25.710772149 +0000
+@@ -115,7 +115,7 @@
+     --------
+     >>> G=nx.path_graph(4)
+     >>> r=nx.degree_pearson_correlation_coefficient(G) 
+-    >>> r 
++    >>> print("%.1f"%r)
+     -0.5
+ 
+     Notes
