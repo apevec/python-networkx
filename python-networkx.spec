@@ -22,6 +22,7 @@ Source2:        http://networkx.github.io/documentation/latest/_downloads/networ
 Source3:        http://networkx.github.io/documentation/latest/_downloads/networkx-documentation.zip
 Patch0:         optional-modules.patch
 Patch1:         test-rounding-fix.patch
+Patch2:         networkx-nose1.0.patch
 BuildArch:      noarch
 
 Requires:       %{name}-core = %{version}-%{release}
@@ -41,7 +42,11 @@ BuildRequires:  python-decorator
 BuildRequires:  PyYAML
 BuildRequires:  scipy
 BuildRequires:  pyparsing
+%if 0%{?rhel} == 6
+BuildRequires:  python-nose1.1
+%else
 BuildRequires:  python-nose
+%endif
 Requires:       python-decorator
 Requires:       PyYAML
 Requires:       scipy
@@ -167,6 +172,9 @@ Documentation for networkx
 %setup -q -n networkx-%{version}
 %patch0 -p1
 %patch1 -p1
+%if 0%{?rhel} == 6
+%patch2 -p1
+%endif
 
 # Fix permissions
 find examples -type f -perm /0111 | xargs chmod a-x
@@ -255,8 +263,9 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 %doc installed-docs/*
 %{python2_sitelib}/*
 %exclude %{python2_sitelib}/networkx/drawing/
+%if !0%{?rhel}
 %exclude %{python2_sitelib}/network/readwrite/nx_shp.py
-
+%endif
 
 %if !0%{?rhel}
 %files drawing
@@ -274,8 +283,9 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 %doc installed-docs/*
 %{python3_sitelib}/*
 %exclude %{python3_sitelib}/networkx/drawing/
+%if !0%{?rhel}
 %exclude %{python3_sitelib}/network/readwrite/nx_shp.py
-
+%endif
 
 %if !0%{?rhel}
 %files -n python3-networkx-drawing
