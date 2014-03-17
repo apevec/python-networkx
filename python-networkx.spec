@@ -23,6 +23,7 @@ Source3:        http://networkx.github.io/documentation/latest/_downloads/networ
 Patch0:         optional-modules.patch
 Patch1:         test-rounding-fix.patch
 Patch2:         networkx-nose1.0.patch
+Patch3:         skip-scipy-0.8-tests.patch
 BuildArch:      noarch
 
 Requires:       %{name}-core = %{version}-%{release}
@@ -174,6 +175,7 @@ Documentation for networkx
 %patch1 -p1
 %if 0%{?rhel} == 6
 %patch2 -p1
+%patch3 -p1
 %endif
 
 # Fix permissions
