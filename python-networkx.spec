@@ -266,7 +266,7 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 %{python2_sitelib}/*
 %exclude %{python2_sitelib}/networkx/drawing/
 %if !0%{?rhel}
-%exclude %{python2_sitelib}/network/readwrite/nx_shp.py
+%exclude %{python2_sitelib}/networkx/readwrite/nx_shp.py
 %endif
 
 %if !0%{?rhel}
@@ -274,7 +274,7 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 %{python2_sitelib}/networkx/drawing
 
 %files geo
-%{python2_sitelib}/network/readwrite/nx_shp.py
+%{python2_sitelib}/networkx/readwrite/nx_shp.py
 %endif
 
 %if 0%{?with_python3}
@@ -286,7 +286,7 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 %{python3_sitelib}/*
 %exclude %{python3_sitelib}/networkx/drawing/
 %if !0%{?rhel}
-%exclude %{python3_sitelib}/network/readwrite/nx_shp.py
+%exclude %{python3_sitelib}/networkx/readwrite/nx_shp.py
 %endif
 
 %if !0%{?rhel}
@@ -294,7 +294,7 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 %{python2_sitelib}/networkx/drawing
 
 %files -n python3-networkx-geo
-%{python3_sitelib}/network/readwrite/nx_shp.py
+%{python3_sitelib}/networkx/readwrite/nx_shp.py
 %endif
 %endif
 
