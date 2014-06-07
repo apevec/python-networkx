@@ -11,7 +11,7 @@
 
 Name:           python-networkx
 Version:        1.8.1
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        BSD
@@ -304,6 +304,9 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.1-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Wed May 14 2014 Bohuslav Kabrda <bkabrda@redhat.com> - 1.8.1-13
 - Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
 
