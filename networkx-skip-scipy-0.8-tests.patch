@@ -4,9 +4,9 @@ el6 currently has scipy 0.7 and the following is only supported by 0.8:
 Also on el6 the drawing/tests/test_layout.py fails as the following is only supported by 0.8:
   scipy.sparse.linalg.eigen_symmetric
 
-diff -Naur networkx-1.8.1.orig/networkx/algorithms/centrality/tests/test_current_flow_betweenness_centrality.py networkx-1.8.1/networkx/algorithms/centrality/tests/test_current_flow_betweenness_centrality.py
---- networkx-1.8.1.orig/networkx/algorithms/centrality/tests/test_current_flow_betweenness_centrality.py	2013-08-04 13:53:31.000000000 +0000
-+++ networkx-1.8.1/networkx/algorithms/centrality/tests/test_current_flow_betweenness_centrality.py	2014-03-17 21:37:38.623458820 +0000
+diff -Naur networkx-1.9.orig/networkx/algorithms/centrality/tests/test_current_flow_betweenness_centrality.py networkx-1.9/networkx/algorithms/centrality/tests/test_current_flow_betweenness_centrality.py
+--- networkx-1.9.orig/networkx/algorithms/centrality/tests/test_current_flow_betweenness_centrality.py	2014-06-25 11:50:58.000000000 -0600
++++ networkx-1.9/networkx/algorithms/centrality/tests/test_current_flow_betweenness_centrality.py	2014-06-30 12:00:00.000000000 -0600
 @@ -41,17 +41,6 @@
          for n in sorted(G):
              assert_almost_equal(b[n],wb_answer[n])
@@ -42,9 +42,9 @@ diff -Naur networkx-1.8.1.orig/networkx/algorithms/centrality/tests/test_current
  
  
  class TestApproximateFlowBetweennessCentrality(object):
-diff -Naur networkx-1.8.1.orig/networkx/drawing/tests/test_layout.py networkx-1.8.1/networkx/drawing/tests/test_layout.py
---- networkx-1.8.1.orig/networkx/drawing/tests/test_layout.py	2013-08-04 13:53:31.000000000 +0000
-+++ networkx-1.8.1/networkx/drawing/tests/test_layout.py	2014-03-17 21:40:40.192283827 +0000
+diff -Naur networkx-1.9.orig/networkx/drawing/tests/test_layout.py networkx-1.9/networkx/drawing/tests/test_layout.py
+--- networkx-1.9.orig/networkx/drawing/tests/test_layout.py	2014-06-25 11:50:58.000000000 -0600
++++ networkx-1.9/networkx/drawing/tests/test_layout.py	2014-06-30 12:00:00.000000000 -0600
 @@ -46,16 +46,3 @@
          pos=nx.drawing.layout._fruchterman_reingold(A)
          pos=nx.drawing.layout._fruchterman_reingold(A,dim=3)
@@ -56,7 +56,7 @@ diff -Naur networkx-1.8.1.orig/networkx/drawing/tests/test_layout.py networkx-1.
 -        except ImportError:
 -            raise SkipTest('scipy not available.')
 -
--        A=nx.to_scipy_sparse_matrix(self.Gs,dtype='f')
+-        A=nx.to_scipy_sparse_matrix(self.Gs,dtype='d')
 -        pos=nx.drawing.layout._sparse_fruchterman_reingold(A)
 -        pos=nx.drawing.layout._sparse_spectral(A)
 -

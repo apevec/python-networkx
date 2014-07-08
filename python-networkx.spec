@@ -1,5 +1,8 @@
-%if 0%{?fedora} > 12
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 8
 %global with_python3 1
+%endif
+%if !0%{?rhel}
+%global with_gdal 1
 %endif
 
 # see https://fedoraproject.org/wiki/Packaging:Python#Macros
@@ -9,25 +12,26 @@
 %{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 %endif
 
-Name:           python-networkx
-Version:        1.8.1
-Release:        14%{?dist}
+%global pkgname networkx
+
+Name:           python-%{pkgname}
+Version:        1.9
+Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        BSD
 URL:            http://networkx.github.io/
-Source0:        https://pypi.python.org/packages/source/n/networkx/networkx-%{version}.tar.gz
-Source1:        http://networkx.github.io/documentation/latest/_downloads/networkx_reference.pdf
-Source2:        http://networkx.github.io/documentation/latest/_downloads/networkx_tutorial.pdf
-Source3:        http://networkx.github.io/documentation/latest/_downloads/networkx-documentation.zip
-Patch0:         optional-modules.patch
-Patch1:         test-rounding-fix.patch
-Patch2:         networkx-nose1.0.patch
-Patch3:         skip-scipy-0.8-tests.patch
+Source0:        https://pypi.python.org/packages/source/n/%{pkgname}/%{pkgname}-%{version}.tar.gz
+Source1:        http://networkx.github.io/documentation/%{pkgname}-%{version}/_downloads/networkx_reference.pdf
+Source2:        http://networkx.github.io/documentation/%{pkgname}-%{version}/_downloads/networkx_tutorial.pdf
+Source3:        http://networkx.github.io/documentation/%{pkgname}-%{version}/_downloads/networkx-documentation.zip
+Patch0:         %{pkgname}-optional-modules.patch
+Patch1:         %{pkgname}-nose1.0.patch
+Patch2:         %{pkgname}-skip-scipy-0.8-tests.patch
 BuildArch:      noarch
 
 Requires:       %{name}-core = %{version}-%{release}
-%if !0%{?rhel}
+%if 0%{?with_gdal}
 Requires:       %{name}-geo = %{version}-%{release}
 Requires:       %{name}-drawing = %{version}-%{release}
 %endif
@@ -58,7 +62,7 @@ NetworkX is a Python 2 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
 
-%if !0%{?rhel}
+%if 0%{?with_gdal}
 
 %package geo
 Summary:        GDAL I/O
@@ -92,17 +96,17 @@ This package provides support for graph visualizations.
 
 
 %if 0%{?with_python3}
-%package -n python3-networkx
+%package -n python3-%{pkgname}
 Summary:        Creates and Manipulates Graphs and Networks
-Requires:       python3-networkx-core = %{version}-%{release}
-Requires:       python3-networkx-geo = %{version}-%{release}
-Requires:       python3-networkx-drawing = %{version}-%{release}
+Requires:       python3-%{pkgname}-core = %{version}-%{release}
+Requires:       python3-%{pkgname}-geo = %{version}-%{release}
+Requires:       python3-%{pkgname}-drawing = %{version}-%{release}
 
-%description -n python3-networkx
+%description -n python3-%{pkgname}
 NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
-%package -n python3-networkx-core
+%package -n python3-%{pkgname}-core
 Summary:        Creates and Manipulates Graphs and Networks
 BuildRequires:  python3-devel
 BuildRequires:  python3-decorator
@@ -114,26 +118,26 @@ Requires:       python3-PyYAML
 Requires:       python3-scipy
 Requires:       python3-pyparsing
 
-%description -n python3-networkx-core
+%description -n python3-%{pkgname}-core
 NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
-%if !0%{?rhel}
-%package -n python3-networkx-geo
+%if 0%{?with_gdal}
+%package -n python3-%{pkgname}-geo
 Summary:        GDAL I/O
-Requires:       python3-networkx-core = %{version}-%{release}
+Requires:       python3-%{pkgname}-core = %{version}-%{release}
 BuildRequires:  gdal-python
 Requires:       gdal-python
 
-%description -n python3-networkx-geo
+%description -n python3-%{pkgname}-geo
 NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
 This package provides GDAL I/O support.
 
-%package -n python3-networkx-drawing
+%package -n python3-%{pkgname}-drawing
 Summary:        visual representations for graphs and networks
-Requires:       python3-networkx-core = %{version}-%{release}
+Requires:       python3-%{pkgname}-core = %{version}-%{release}
 BuildRequires:  graphviz-python
 BuildRequires:  pydot
 BuildRequires:  python3-matplotlib
@@ -141,7 +145,7 @@ Requires:       graphviz-python
 Requires:       pydot
 Requires:       python3-matplotlib
 
-%description -n python3-networkx-drawing
+%description -n python3-%{pkgname}-drawing
 NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
@@ -159,6 +163,8 @@ Group:          Documentation
 BuildRequires:  python-sphinx10
 %else
 BuildRequires:  python-sphinx
+BuildRequires:  python-sphinx_rtd_theme
+BuildRequires:  python-numpydoc
 %endif
 BuildRequires:  tex(latex)
 BuildRequires:  tex-preview
@@ -170,35 +176,18 @@ Documentation for networkx
 
 
 %prep
-%setup -q -n networkx-%{version}
+%setup -q -n %{pkgname}-%{version}
 %patch0 -p1
-%patch1 -p1
 %if 0%{?rhel} == 6
+%patch1 -p1
 %patch2 -p1
-%patch3 -p1
 %endif
 
 # Fix permissions
 find examples -type f -perm /0111 | xargs chmod a-x
 
-# Overwrite the 0-length doc files with the real doc files
+# Avoid downloading the doc files while building
 cp -pf %{SOURCE1} %{SOURCE2} %{SOURCE3} doc/source
-
-# Use the system python-decorator instead of the bundled version
-sed -e '/          "networkx\.external.*",/d' \
-    -e "/sys\.version >= '3'/,/^$/d" \
-    -i setup.py
-cd networkx
-rm -fr external
-sed "/import networkx\.external/d" __init__.py > init.py
-touch -r __init__.py init.py
-mv -f init.py __init__.py
-for f in utils/decorators.py utils/misc.py; do
-  sed "s/networkx\.external\.//" $f > fixed.py
-  touch -r $f fixed.py
-  mv -f fixed.py $f
-done
-cd ..
 
 %build
 python2 setup.py build
@@ -251,6 +240,7 @@ done
 %endif
 
 %clean
+rm -fr %{buildroot}
 rm -f /tmp/tmp??????
 
 %check
@@ -265,11 +255,11 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 %doc installed-docs/*
 %{python2_sitelib}/*
 %exclude %{python2_sitelib}/networkx/drawing/
-%if !0%{?rhel}
+%if 0%{?with_gdal}
 %exclude %{python2_sitelib}/networkx/readwrite/nx_shp.py
 %endif
 
-%if !0%{?rhel}
+%if 0%{?with_gdal}
 %files drawing
 %{python2_sitelib}/networkx/drawing
 
@@ -285,11 +275,11 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 %doc installed-docs/*
 %{python3_sitelib}/*
 %exclude %{python3_sitelib}/networkx/drawing/
-%if !0%{?rhel}
+%if 0%{?with_gdal}
 %exclude %{python3_sitelib}/networkx/readwrite/nx_shp.py
 %endif
 
-%if !0%{?rhel}
+%if 0%{?with_gdal}
 %files -n python3-networkx-drawing
 %{python2_sitelib}/networkx/drawing
 
@@ -304,6 +294,11 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Tue Jul  8 2014 Jerry James <loganjerry@gmail.com> - 1.9-1
+- New upstream version
+- Drop upstreamed -test-rounding-fix patch
+- Upstream no longer bundles python-decorator; drop the workaround
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.1-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

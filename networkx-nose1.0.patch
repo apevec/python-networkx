@@ -1,6 +1,6 @@
-diff -Naur networkx-1.8.1.orig/networkx/tests/test.py networkx-1.8.1/networkx/tests/test.py
---- networkx-1.8.1.orig/networkx/tests/test.py	2013-08-04 13:53:31.000000000 +0000
-+++ networkx-1.8.1/networkx/tests/test.py	2014-03-17 20:49:15.624551199 +0000
+diff -Naur networkx-1.9.orig/networkx/tests/test.py networkx-1.9/networkx/tests/test.py
+--- networkx-1.9.orig/networkx/tests/test.py	2014-06-25 11:50:58.000000000 -0600
++++ networkx-1.9/networkx/tests/test.py	2014-06-30 12:00:00.000000000 -0600
 @@ -2,6 +2,24 @@
  import sys
  from os import path,getcwd
