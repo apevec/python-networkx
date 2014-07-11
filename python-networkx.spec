@@ -16,7 +16,7 @@
 
 Name:           python-%{pkgname}
 Version:        1.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        BSD
@@ -47,6 +47,7 @@ BuildRequires:  python-decorator
 BuildRequires:  PyYAML
 BuildRequires:  scipy
 BuildRequires:  pyparsing
+BuildRequires:  python-setuptools
 %if 0%{?rhel} == 6
 BuildRequires:  python-nose1.1
 %else
@@ -113,6 +114,7 @@ BuildRequires:  python3-decorator
 BuildRequires:  python3-PyYAML
 BuildRequires:  python3-scipy
 BuildRequires:  python3-pyparsing
+BuildRequires:  python3-setuptools
 Requires:       python3-decorator
 Requires:       python3-PyYAML
 Requires:       python3-scipy
@@ -294,6 +296,9 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Thu Jul 10 2014 Jerry James <loganjerry@gmail.com> - 1.9-2
+- BR python-setuptools
+
 * Tue Jul  8 2014 Jerry James <loganjerry@gmail.com> - 1.9-1
 - New upstream version
 - Drop upstreamed -test-rounding-fix patch
