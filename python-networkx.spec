@@ -15,8 +15,8 @@
 %global pkgname networkx
 
 Name:           python-%{pkgname}
-Version:        1.9
-Release:        2%{?dist}
+Version:        1.9.1
+Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        BSD
@@ -251,7 +251,8 @@ mv networkx site-packages
 PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 %files
-%doc README.txt LICENSE.txt
+%doc README.txt
+%license LICENSE.txt
 
 %files core
 %doc installed-docs/*
@@ -271,7 +272,8 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 %if 0%{?with_python3}
 %files -n python3-networkx
-%doc README.txt LICENSE.txt
+%doc README.txt
+%license LICENSE.txt
 
 %files -n python3-networkx-core
 %doc installed-docs/*
@@ -296,6 +298,10 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Mon Sep 22 2014 Jerry James <loganjerry@gmail.com> - 1.9.1-1
+- New upstream version
+- Fix license handling
+
 * Thu Jul 10 2014 Jerry James <loganjerry@gmail.com> - 1.9-2
 - BR python-setuptools
 
