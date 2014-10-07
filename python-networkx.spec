@@ -16,7 +16,7 @@
 
 Name:           python-%{pkgname}
 Version:        1.9.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 Group:          Development/Languages
 License:        BSD
@@ -259,7 +259,7 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 %{python2_sitelib}/*
 %exclude %{python2_sitelib}/networkx/drawing/
 %if 0%{?with_gdal}
-%exclude %{python2_sitelib}/networkx/readwrite/nx_shp.py
+%exclude %{python2_sitelib}/networkx/readwrite/nx_shp.py*
 %endif
 
 %if 0%{?with_gdal}
@@ -267,7 +267,7 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 %{python2_sitelib}/networkx/drawing
 
 %files geo
-%{python2_sitelib}/networkx/readwrite/nx_shp.py
+%{python2_sitelib}/networkx/readwrite/nx_shp.py*
 %endif
 
 %if 0%{?with_python3}
@@ -281,14 +281,16 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 %exclude %{python3_sitelib}/networkx/drawing/
 %if 0%{?with_gdal}
 %exclude %{python3_sitelib}/networkx/readwrite/nx_shp.py
+%exclude %{python3_sitelib}/networkx/readwrite/__pycache__/nx_shp.*
 %endif
 
 %if 0%{?with_gdal}
 %files -n python3-networkx-drawing
-%{python2_sitelib}/networkx/drawing
+%{python3_sitelib}/networkx/drawing
 
 %files -n python3-networkx-geo
 %{python3_sitelib}/networkx/readwrite/nx_shp.py
+%{python3_sitelib}/networkx/readwrite/__pycache__/nx_shp.*
 %endif
 %endif
 
@@ -298,6 +300,10 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Tue Oct  7 2014 Jerry James <loganjerry@gmail.com> - 1.9.1-2
+- Fix python3-networkx-drawing subpackage (bz 1149980)
+- Fix python(3)-geo subpackage
+
 * Mon Sep 22 2014 Jerry James <loganjerry@gmail.com> - 1.9.1-1
 - New upstream version
 - Fix license handling
