@@ -1,4 +1,4 @@
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 8
+%if 0%{?fedora} || 0%{?rhel} >= 8
 %global with_python3 1
 %endif
 %if !0%{?rhel}
@@ -16,9 +16,8 @@
 
 Name:           python-%{pkgname}
 Version:        1.9.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
-Group:          Development/Languages
 License:        BSD
 URL:            http://networkx.github.io/
 Source0:        https://pypi.python.org/packages/source/n/%{pkgname}/%{pkgname}-%{version}.tar.gz
@@ -159,7 +158,6 @@ This package provides support for graph visualizations.
 
 %package doc
 Summary:        Documentation for networkx
-Group:          Documentation
 
 %if 0%{?rhel} == 6
 BuildRequires:  python-sphinx10
@@ -171,6 +169,7 @@ BuildRequires:  python-numpydoc
 BuildRequires:  tex(latex)
 BuildRequires:  tex-preview
 BuildRequires:  python-matplotlib
+Provides:       bundled(jquery)
 
 
 %description doc
@@ -300,6 +299,9 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Sat Feb 21 2015 Jerry James <loganjerry@gmail.com> - 1.9.1-3
+- Note bundled jquery
+
 * Tue Oct  7 2014 Jerry James <loganjerry@gmail.com> - 1.9.1-2
 - Fix python3-networkx-drawing subpackage (bz 1149980)
 - Fix python(3)-geo subpackage
