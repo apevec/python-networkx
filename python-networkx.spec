@@ -16,7 +16,7 @@
 
 Name:           python-%{pkgname}
 Version:        1.9.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
@@ -299,6 +299,9 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Sat Feb 21 2015 Jerry James <loganjerry@gmail.com> - 1.9.1-3
 - Note bundled jquery
 
