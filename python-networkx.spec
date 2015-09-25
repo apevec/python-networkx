@@ -1,15 +1,8 @@
-%if 0%{?fedora} || 0%{?rhel} >= 8
+%if 0%{?fedora}
 %global with_python3 1
 %endif
 %if !0%{?rhel}
 %global with_gdal 1
-%endif
-
-# see https://fedoraproject.org/wiki/Packaging:Python#Macros
-%if 0%{?rhel} && 0%{?rhel} <= 6
-%{!?__python2: %global __python2 /usr/bin/python2}
-%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 %endif
 
 %global pkgname networkx
@@ -47,11 +40,7 @@ BuildRequires:  PyYAML
 BuildRequires:  scipy
 BuildRequires:  pyparsing
 BuildRequires:  python-setuptools
-%if 0%{?rhel} == 6
-BuildRequires:  python-nose1.1
-%else
 BuildRequires:  python-nose
-%endif
 Requires:       python-decorator
 Requires:       PyYAML
 Requires:       scipy
@@ -159,13 +148,9 @@ This package provides support for graph visualizations.
 %package doc
 Summary:        Documentation for networkx
 
-%if 0%{?rhel} == 6
-BuildRequires:  python-sphinx10
-%else
 BuildRequires:  python-sphinx
 BuildRequires:  python-sphinx_rtd_theme
 BuildRequires:  python-numpydoc
-%endif
 BuildRequires:  tex(latex)
 BuildRequires:  tex-preview
 BuildRequires:  python-matplotlib
@@ -179,10 +164,6 @@ Documentation for networkx
 %prep
 %setup -q -n %{pkgname}-%{version}
 %patch0 -p1
-%if 0%{?rhel} == 6
-%patch1 -p1
-%patch2 -p1
-%endif
 
 # Fix permissions
 find examples -type f -perm /0111 | xargs chmod a-x
@@ -192,11 +173,7 @@ cp -pf %{SOURCE1} %{SOURCE2} %{SOURCE3} doc/source
 
 %build
 python2 setup.py build
-%if 0%{?rhel} == 6
-PYTHONPATH=$PWD/build/lib make SPHINXBUILD=sphinx-1.0-build -C doc html
-%else
 PYTHONPATH=$PWD/build/lib make -C doc html
-%endif
 
 %if 0%{?with_python3}
 # Setup for python3
