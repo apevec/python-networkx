@@ -1,0 +1,35 @@
+From 50ef809ca1e3b365b22a555ed51cc2637c1dd9b9 Mon Sep 17 00:00:00 2001
+From: Alan Pevec <alan.pevec@redhat.com>
+Date: Fri, 25 Sep 2015 21:46:17 +0200
+Subject: [PATCH] Do not check Sphinx version
+
+Latest Sphinx in Fedora is 1.2.3
+---
+ doc/source/conf.py | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/doc/source/conf.py b/doc/source/conf.py
+index e265348..4a0b1dd 100644
+--- a/doc/source/conf.py
++++ b/doc/source/conf.py
+@@ -33,11 +33,6 @@ def cd(newpath):
+             # If oldpath no longer exists, stay where we are.
+             pass
+ 
+-# Check Sphinx version
+-import sphinx
+-if sphinx.__version__ < "1.3":
+-    raise RuntimeError("Sphinx 1.3 or newer required")
+-
+ # Environment variable to know if the docs are being built on rtd.
+ on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+ print
+@@ -73,7 +68,7 @@ extensions = [
+     'sphinx.ext.doctest',
+     'sphinx.ext.intersphinx',
+     'sphinx.ext.mathjax',
+-    'sphinx.ext.napoleon',
++    'sphinxcontrib.napoleon',
+     'sphinx.ext.pngmath',
+     'sphinx.ext.todo',
+     'sphinx.ext.viewcode',

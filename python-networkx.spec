@@ -8,18 +8,16 @@
 %global pkgname networkx
 
 Name:           python-%{pkgname}
-Version:        1.9.1
-Release:        4%{?dist}
+Version:        1.10
+Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
 Source0:        https://pypi.python.org/packages/source/n/%{pkgname}/%{pkgname}-%{version}.tar.gz
-Source1:        http://networkx.github.io/documentation/%{pkgname}-%{version}/_downloads/networkx_reference.pdf
-Source2:        http://networkx.github.io/documentation/%{pkgname}-%{version}/_downloads/networkx_tutorial.pdf
-Source3:        http://networkx.github.io/documentation/%{pkgname}-%{version}/_downloads/networkx-documentation.zip
-Patch0:         %{pkgname}-optional-modules.patch
-Patch1:         %{pkgname}-nose1.0.patch
-Patch2:         %{pkgname}-skip-scipy-0.8-tests.patch
+
+Patch0001: 0001-make-importing-of-drawing-and-geo-subpackages-option.patch
+Patch0002: 0002-Do-not-check-Sphinx-version.patch
+
 BuildArch:      noarch
 
 Requires:       %{name}-core = %{version}-%{release}
@@ -150,6 +148,7 @@ Summary:        Documentation for networkx
 
 BuildRequires:  python-sphinx
 BuildRequires:  python-sphinx_rtd_theme
+BuildRequires:  python-sphinxcontrib-napoleon
 BuildRequires:  python-numpydoc
 BuildRequires:  tex(latex)
 BuildRequires:  tex-preview
@@ -163,13 +162,12 @@ Documentation for networkx
 
 %prep
 %setup -q -n %{pkgname}-%{version}
-%patch0 -p1
+
+%patch0001 -p1
+%patch0002 -p1
 
 # Fix permissions
 find examples -type f -perm /0111 | xargs chmod a-x
-
-# Avoid downloading the doc files while building
-cp -pf %{SOURCE1} %{SOURCE2} %{SOURCE3} doc/source
 
 %build
 python2 setup.py build
@@ -227,7 +225,7 @@ mv networkx site-packages
 PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 %files
-%doc README.txt
+%doc README.rst
 %license LICENSE.txt
 
 %files core
@@ -248,7 +246,7 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 %if 0%{?with_python3}
 %files -n python3-networkx
-%doc README.txt
+%doc README.rst
 %license LICENSE.txt
 
 %files -n python3-networkx-core
@@ -276,6 +274,9 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Fri Sep 25 2015 Alan Pevec <alan.pevec@redhat.com> 1.10-1
+- Update to upstream 1.10
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,0 +1,39 @@
+From f07b8c51e05c3707c8afb18891d53c901887fa47 Mon Sep 17 00:00:00 2001
+From: Alan Pevec <alan.pevec@redhat.com>
+Date: Fri, 25 Sep 2015 20:50:21 +0200
+Subject: [PATCH] make importing of drawing and geo subpackages optional
+
+---
+ networkx/__init__.py           | 7 +++++--
+ networkx/readwrite/__init__.py | 6 +++++-
+ 2 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/networkx/__init__.py b/networkx/__init__.py
+index bc8bb9a..3f88091 100644
+--- a/networkx/__init__.py
++++ b/networkx/__init__.py
+@@ -95,5 +95,8 @@ import networkx.linalg
+ from networkx.linalg import *
+ from networkx.tests.test import run as test
+ 
+-import networkx.drawing
+-from networkx.drawing import *
++try:
++    import networkx.drawing
++    from networkx.drawing import *
++except ImportError:
++    pass
+diff --git a/networkx/readwrite/__init__.py b/networkx/readwrite/__init__.py
+index 0040b42..91016d3 100644
+--- a/networkx/readwrite/__init__.py
++++ b/networkx/readwrite/__init__.py
+@@ -14,4 +14,8 @@ from networkx.readwrite.nx_yaml import *
+ from networkx.readwrite.gml import *
+ from networkx.readwrite.graphml import *
+ from networkx.readwrite.gexf import *
+-from networkx.readwrite.nx_shp import *
++
++try:
++    from networkx.readwrite.nx_shp import *
++except ImportError:
++    pass
