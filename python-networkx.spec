@@ -153,6 +153,7 @@ BuildRequires:  python-numpydoc
 BuildRequires:  tex(latex)
 BuildRequires:  tex-preview
 BuildRequires:  python-matplotlib
+BuildRequires:  fontawesome-fonts-web
 Provides:       bundled(jquery)
 
 
