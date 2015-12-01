@@ -1,0 +1,20 @@
+With recent versions of numpy, the original expression results in:
+
+TypeError: Cannot cast ufunc add output from dtype('float64') to dtype('int64')
+with casting rule 'same_kind'
+
+This patch solves the issue by not trying to add in place.
+
+diff -Naur networkx-networkx-1.10.orig/networkx/linalg/algebraicconnectivity.py networkx-networkx-1.10/networkx/linalg/algebraicconnectivity.py
+--- networkx-networkx-1.10.orig/networkx/linalg/algebraicconnectivity.py	2015-10-30 15:41:35.000000000 -0600
++++ networkx-networkx-1.10/networkx/linalg/algebraicconnectivity.py	2015-12-01 09:49:51.568953316 -0700
+@@ -244,8 +244,7 @@
+             W -= (W.T * X * X.T).T
+             project(W)
+             # Compute the diagonal of P * L * P as a Jacobi preconditioner.
+-            D = L.diagonal()
+-            D += 2. * (asarray(X) * asarray(W)).sum(axis=1)
++            D = L.diagonal() + 2. * (asarray(X) * asarray(W)).sum(axis=1)
+             D += (asarray(X) * asarray(X * (W.T * X))).sum(axis=1)
+             D[D < tol * Lnorm] = 1.
+             D = 1. / D

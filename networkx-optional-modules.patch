@@ -1,23 +1,22 @@
 make importing of drawing and geo subpackages optional
 
-diff -Naur networkx-1.9.orig/networkx/__init__.py networkx-1.9/networkx/__init__.py
---- networkx-1.9.orig/networkx/__init__.py	2014-06-25 12:02:09.000000000 -0600
-+++ networkx-1.9/networkx/__init__.py	2014-06-30 12:00:00.000000000 -0600
-@@ -84,6 +84,8 @@
+diff -Naur networkx-networkx-1.10.orig/networkx/__init__.py networkx-networkx-1.10/networkx/__init__.py
+--- networkx-networkx-1.10.orig/networkx/__init__.py	2015-10-30 15:41:35.000000000 -0600
++++ networkx-networkx-1.10/networkx/__init__.py	2015-11-24 09:34:20.741823392 -0700
+@@ -95,5 +95,8 @@
  from networkx.linalg import *
  from networkx.tests.test import run as test
  
 -import networkx.drawing
 -from networkx.drawing import *
--
 +try:
 +    import networkx.drawing
 +    from networkx.drawing import *
 +except ImportError:
 +    pass
-diff -Naur networkx-1.9.orig/networkx/readwrite/__init__.py networkx-1.9/networkx/readwrite/__init__.py
---- networkx-1.9.orig/networkx/readwrite/__init__.py	2014-06-25 11:50:58.000000000 -0600
-+++ networkx-1.9/networkx/readwrite/__init__.py	2014-06-30 12:00:00.000000000 -0600
+diff -Naur networkx-networkx-1.10.orig/networkx/readwrite/__init__.py networkx-networkx-1.10/networkx/readwrite/__init__.py
+--- networkx-networkx-1.10.orig/networkx/readwrite/__init__.py	2015-10-30 15:41:35.000000000 -0600
++++ networkx-networkx-1.10/networkx/readwrite/__init__.py	2015-11-24 09:34:46.539738141 -0700
 @@ -14,4 +14,8 @@
  from networkx.readwrite.gml import *
  from networkx.readwrite.graphml import *

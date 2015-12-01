@@ -15,18 +15,20 @@
 %global pkgname networkx
 
 Name:           python-%{pkgname}
-Version:        1.9.1
-Release:        5%{?dist}
+Version:        1.10
+Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
-Source0:        https://pypi.python.org/packages/source/n/%{pkgname}/%{pkgname}-%{version}.tar.gz
-Source1:        http://networkx.github.io/documentation/%{pkgname}-%{version}/_downloads/networkx_reference.pdf
-Source2:        http://networkx.github.io/documentation/%{pkgname}-%{version}/_downloads/networkx_tutorial.pdf
-Source3:        http://networkx.github.io/documentation/%{pkgname}-%{version}/_downloads/networkx-documentation.zip
+Source0:        https://github.com/networkx/networkx/archive/%{pkgname}-%{version}.tar.gz
+Source1:        https://github.com/networkx/documentation/blob/gh-pages/%{pkgname}-%{version}/_downloads/networkx_reference.pdf
+Source2:        https://github.com/networkx/documentation/blob/gh-pages/%{pkgname}-%{version}/_downloads/networkx_tutorial.pdf
+Source3:        https://github.com/networkx/documentation/blob/gh-pages/%{pkgname}-%{version}/_downloads/networkx-documentation.zip
 Patch0:         %{pkgname}-optional-modules.patch
 Patch1:         %{pkgname}-nose1.0.patch
 Patch2:         %{pkgname}-skip-scipy-0.8-tests.patch
+# Fix failure to add 2 matrices with recent numpy versions
+Patch3:         %{pkgname}-numpy.patch
 BuildArch:      noarch
 
 Requires:       %{name}-core = %{version}-%{release}
@@ -162,7 +164,7 @@ Summary:        Documentation for networkx
 %if 0%{?rhel} == 6
 BuildRequires:  python-sphinx10
 %else
-BuildRequires:  python-sphinx
+BuildRequires:  python2-sphinx
 BuildRequires:  python-sphinx_rtd_theme
 BuildRequires:  python-numpydoc
 %endif
@@ -177,12 +179,13 @@ Documentation for networkx
 
 
 %prep
-%setup -q -n %{pkgname}-%{version}
+%setup -q -n %{pkgname}-%{pkgname}-%{version}
 %patch0 -p1
 %if 0%{?rhel} == 6
 %patch1 -p1
 %patch2 -p1
 %endif
+%patch3 -p1
 
 # Fix permissions
 find examples -type f -perm /0111 | xargs chmod a-x
@@ -195,7 +198,7 @@ python2 setup.py build
 %if 0%{?rhel} == 6
 PYTHONPATH=$PWD/build/lib make SPHINXBUILD=sphinx-1.0-build -C doc html
 %else
-PYTHONPATH=$PWD/build/lib make -C doc html
+PYTHONPATH=$PWD/build/lib make SPHINXBUILD=sphinx-build-2 -C doc html
 %endif
 
 %if 0%{?with_python3}
@@ -247,10 +250,10 @@ rm -f /tmp/tmp??????
 %check
 mkdir site-packages
 mv networkx site-packages
-PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
+PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 
 %files
-%doc README.txt
+%doc README.rst
 %license LICENSE.txt
 
 %files core
@@ -271,7 +274,7 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 %if 0%{?with_python3}
 %files -n python3-networkx
-%doc README.txt
+%doc README.rst
 %license LICENSE.txt
 
 %files -n python3-networkx-core
@@ -299,6 +302,11 @@ PYTHONPATH=`pwd`/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Tue Dec  1 2015 Jerry James <loganjerry@gmail.com> - 1.10-1
+- New upstream version
+- Update URLs
+- Add -numpy patch to fix test failure
+
 * Tue Nov 10 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Changes/python3.5
 
