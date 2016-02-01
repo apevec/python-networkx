@@ -12,36 +12,44 @@
 %{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 %endif
 
-%global pkgname networkx
+%global srcname networkx
 
-Name:           python-%{pkgname}
+Name:           python-%{srcname}
 Version:        1.10
 Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
-Source0:        https://github.com/networkx/networkx/archive/%{pkgname}-%{version}.tar.gz
-Source1:        https://github.com/networkx/documentation/blob/gh-pages/%{pkgname}-%{version}/_downloads/networkx_reference.pdf
-Source2:        https://github.com/networkx/documentation/blob/gh-pages/%{pkgname}-%{version}/_downloads/networkx_tutorial.pdf
-Source3:        https://github.com/networkx/documentation/blob/gh-pages/%{pkgname}-%{version}/_downloads/networkx-documentation.zip
-Patch0:         %{pkgname}-optional-modules.patch
-Patch1:         %{pkgname}-nose1.0.patch
-Patch2:         %{pkgname}-skip-scipy-0.8-tests.patch
+Source0:        https://github.com/networkx/networkx/archive/%{srcname}-%{version}.tar.gz
+Source1:        https://github.com/networkx/documentation/blob/gh-pages/%{srcname}-%{version}/_downloads/networkx_reference.pdf
+Source2:        https://github.com/networkx/documentation/blob/gh-pages/%{srcname}-%{version}/_downloads/networkx_tutorial.pdf
+Source3:        https://github.com/networkx/documentation/blob/gh-pages/%{srcname}-%{version}/_downloads/networkx-documentation.zip
+Patch0:         %{srcname}-optional-modules.patch
+Patch1:         %{srcname}-nose1.0.patch
+Patch2:         %{srcname}-skip-scipy-0.8-tests.patch
 # Fix failure to add 2 matrices with recent numpy versions
-Patch3:         %{pkgname}-numpy.patch
+Patch3:         %{srcname}-numpy.patch
 BuildArch:      noarch
-
-Requires:       %{name}-core = %{version}-%{release}
-%if 0%{?with_gdal}
-Requires:       %{name}-geo = %{version}-%{release}
-Requires:       %{name}-drawing = %{version}-%{release}
-%endif
 
 %description
 NetworkX is a Python 2 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
-%package core
+%package -n python2-%{srcname}
+Summary:        Creates and Manipulates Graphs and Networks
+Requires:       python2-%{srcname}-core = %{version}-%{release}
+%if 0%{?with_gdal}
+Requires:       python2-%{srcname}-geo = %{version}-%{release}
+Requires:       python2-%{srcname}-drawing = %{version}-%{release}
+%endif
+
+%{?python_provide:%python_provide python2-%{srcname}}
+
+%description -n python2-%{srcname}
+NetworkX is a Python 2 package for the creation, manipulation, and
+study of the structure, dynamics, and functions of complex networks.
+
+%package -n python2-%{srcname}-core
 Summary:        Creates and Manipulates Graphs and Networks
 BuildRequires:  python2-devel
 BuildRequires:  python-decorator
@@ -59,36 +67,42 @@ Requires:       PyYAML
 Requires:       scipy
 Requires:       pyparsing
 
-%description core
+%{?python_provide:%python_provide python2-%{srcname}-core}
+
+%description -n python2-%{srcname}-core
 NetworkX is a Python 2 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
 
 %if 0%{?with_gdal}
 
-%package geo
+%package -n python2-%{srcname}-geo
 Summary:        GDAL I/O
-Requires:       %{name}-core = %{version}-%{release}
+Requires:       python2-%{srcname}-core = %{version}-%{release}
 BuildRequires:  gdal-python
 Requires:       gdal-python
 
-%description geo
+%{?python_provide:%python_provide python2-%{srcname}-geo}
+
+%description -n python2-%{srcname}-geo
 NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
 This package provides GDAL I/O support.
 
 
-%package drawing
+%package -n python2-%{srcname}-drawing
 Summary:        visual representations for graphs and networks
-Requires:       %{name}-core = %{version}-%{release}
+Requires:       python2-%{srcname}-core = %{version}-%{release}
 BuildRequires:  graphviz-python
 BuildRequires:  pydot
 Requires:       graphviz-python
 Requires:       pydot
 Requires:       python-matplotlib
 
-%description drawing
+%{?python_provide:%python_provide python2-%{srcname}-drawing}
+
+%description -n python2-%{srcname}-drawing
 NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
@@ -98,17 +112,19 @@ This package provides support for graph visualizations.
 
 
 %if 0%{?with_python3}
-%package -n python3-%{pkgname}
+%package -n python3-%{srcname}
 Summary:        Creates and Manipulates Graphs and Networks
-Requires:       python3-%{pkgname}-core = %{version}-%{release}
-Requires:       python3-%{pkgname}-geo = %{version}-%{release}
-Requires:       python3-%{pkgname}-drawing = %{version}-%{release}
+Requires:       python3-%{srcname}-core = %{version}-%{release}
+Requires:       python3-%{srcname}-geo = %{version}-%{release}
+Requires:       python3-%{srcname}-drawing = %{version}-%{release}
 
-%description -n python3-%{pkgname}
+%{?python_provide:%python_provide python3-%{srcname}}
+
+%description -n python3-%{srcname}
 NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
-%package -n python3-%{pkgname}-core
+%package -n python3-%{srcname}-core
 Summary:        Creates and Manipulates Graphs and Networks
 BuildRequires:  python3-devel
 BuildRequires:  python3-decorator
@@ -121,26 +137,30 @@ Requires:       python3-PyYAML
 Requires:       python3-scipy
 Requires:       python3-pyparsing
 
-%description -n python3-%{pkgname}-core
+%{?python_provide:%python_provide python3-%{srcname}-core}
+
+%description -n python3-%{srcname}-core
 NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
 %if 0%{?with_gdal}
-%package -n python3-%{pkgname}-geo
+%package -n python3-%{srcname}-geo
 Summary:        GDAL I/O
-Requires:       python3-%{pkgname}-core = %{version}-%{release}
+Requires:       python3-%{srcname}-core = %{version}-%{release}
 BuildRequires:  gdal-python
 Requires:       gdal-python
 
-%description -n python3-%{pkgname}-geo
+%{?python_provide:%python_provide python3-%{srcname}-geo}
+
+%description -n python3-%{srcname}-geo
 NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
 This package provides GDAL I/O support.
 
-%package -n python3-%{pkgname}-drawing
+%package -n python3-%{srcname}-drawing
 Summary:        visual representations for graphs and networks
-Requires:       python3-%{pkgname}-core = %{version}-%{release}
+Requires:       python3-%{srcname}-core = %{version}-%{release}
 BuildRequires:  graphviz-python
 BuildRequires:  pydot
 BuildRequires:  python3-matplotlib
@@ -148,7 +168,9 @@ Requires:       graphviz-python
 Requires:       pydot
 Requires:       python3-matplotlib
 
-%description -n python3-%{pkgname}-drawing
+%{?python_provide:%python_provide python3-%{srcname}-drawing}
+
+%description -n python3-%{srcname}-drawing
 NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
@@ -167,6 +189,7 @@ BuildRequires:  python-sphinx10
 BuildRequires:  python2-sphinx
 BuildRequires:  python-sphinx_rtd_theme
 BuildRequires:  python-numpydoc
+BuildRequires:  pydot
 %endif
 BuildRequires:  tex(latex)
 BuildRequires:  tex-preview
@@ -179,7 +202,7 @@ Documentation for networkx
 
 
 %prep
-%setup -q -n %{pkgname}-%{pkgname}-%{version}
+%setup -q -n %{srcname}-%{srcname}-%{version}
 %patch0 -p1
 %if 0%{?rhel} == 6
 %patch1 -p1
@@ -194,7 +217,7 @@ find examples -type f -perm /0111 | xargs chmod a-x
 cp -pf %{SOURCE1} %{SOURCE2} %{SOURCE3} doc/source
 
 %build
-python2 setup.py build
+%py2_build
 %if 0%{?rhel} == 6
 PYTHONPATH=$PWD/build/lib make SPHINXBUILD=sphinx-1.0-build -C doc html
 %else
@@ -207,13 +230,13 @@ mv build build2
 mv networkx/*.pyc build2
 
 # Build for python3
-python3 setup.py build
+%py3_build
 %endif
 
 %install
 %if 0%{?with_python3}
 # Install the python3 version
-python3 setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+%py3_install
 
 # Setup for python2
 mv build build3
@@ -222,7 +245,7 @@ mv -f build/*.pyc networkx
 %endif
 
 # Install the python2 version
-python2 setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
+%py2_install
 mv $RPM_BUILD_ROOT%{_docdir}/networkx-%{version} ./installed-docs
 rm -f installed-docs/INSTALL.txt
 
@@ -252,11 +275,11 @@ mkdir site-packages
 mv networkx site-packages
 PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 
-%files
+%files -n python2-%{srcname}
 %doc README.rst
 %license LICENSE.txt
 
-%files core
+%files -n python2-%{srcname}-core
 %doc installed-docs/*
 %{python2_sitelib}/*
 %exclude %{python2_sitelib}/networkx/drawing/
@@ -265,10 +288,10 @@ PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 %endif
 
 %if 0%{?with_gdal}
-%files drawing
+%files -n python2-%{srcname}-drawing
 %{python2_sitelib}/networkx/drawing
 
-%files geo
+%files -n python2-%{srcname}-geo
 %{python2_sitelib}/networkx/readwrite/nx_shp.py*
 %endif
 
@@ -302,6 +325,9 @@ PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Mon Feb  1 2016 Jerry James <loganjerry@gmail.com> - 1.10-1
+- Comply with latest python packaging guidelines (bz 1301767)
+
 * Tue Dec  1 2015 Jerry James <loganjerry@gmail.com> - 1.10-1
 - New upstream version
 - Update URLs
