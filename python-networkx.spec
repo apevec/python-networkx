@@ -15,20 +15,15 @@
 %global srcname networkx
 
 Name:           python-%{srcname}
-Version:        1.10
-Release:        2%{?dist}
+Version:        1.11
+Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
 Source0:        https://github.com/networkx/networkx/archive/%{srcname}-%{version}.tar.gz
-Source1:        https://github.com/networkx/documentation/blob/gh-pages/%{srcname}-%{version}/_downloads/networkx_reference.pdf
-Source2:        https://github.com/networkx/documentation/blob/gh-pages/%{srcname}-%{version}/_downloads/networkx_tutorial.pdf
-Source3:        https://github.com/networkx/documentation/blob/gh-pages/%{srcname}-%{version}/_downloads/networkx-documentation.zip
 Patch0:         %{srcname}-optional-modules.patch
 Patch1:         %{srcname}-nose1.0.patch
 Patch2:         %{srcname}-skip-scipy-0.8-tests.patch
-# Fix failure to add 2 matrices with recent numpy versions
-Patch3:         %{srcname}-numpy.patch
 BuildArch:      noarch
 
 %description
@@ -52,19 +47,19 @@ study of the structure, dynamics, and functions of complex networks.
 %package -n python2-%{srcname}-core
 Summary:        Creates and Manipulates Graphs and Networks
 BuildRequires:  python2-devel
-BuildRequires:  python-decorator
-BuildRequires:  PyYAML
-BuildRequires:  scipy
+BuildRequires:  python2-decorator
+BuildRequires:  python2-scipy
+BuildRequires:  python2-setuptools
+BuildRequires:  python2-yaml
 BuildRequires:  pyparsing
-BuildRequires:  python-setuptools
 %if 0%{?rhel} == 6
 BuildRequires:  python-nose1.1
 %else
-BuildRequires:  python-nose
+BuildRequires:  python2-nose
 %endif
-Requires:       python-decorator
-Requires:       PyYAML
-Requires:       scipy
+Requires:       python2-decorator
+Requires:       python2-scipy
+Requires:       python2-yaml
 Requires:       pyparsing
 
 %{?python_provide:%python_provide python2-%{srcname}-core}
@@ -128,12 +123,12 @@ study of the structure, dynamics, and functions of complex networks.
 Summary:        Creates and Manipulates Graphs and Networks
 BuildRequires:  python3-devel
 BuildRequires:  python3-decorator
-BuildRequires:  python3-PyYAML
+BuildRequires:  python3-yaml
 BuildRequires:  python3-scipy
 BuildRequires:  python3-pyparsing
 BuildRequires:  python3-setuptools
 Requires:       python3-decorator
-Requires:       python3-PyYAML
+Requires:       python3-yaml
 Requires:       python3-scipy
 Requires:       python3-pyparsing
 
@@ -186,11 +181,15 @@ Summary:        Documentation for networkx
 %if 0%{?rhel} == 6
 BuildRequires:  python-sphinx10
 %else
+BuildRequires:  python2-pandas
+BuildRequires:  python2-pydotplus
 BuildRequires:  python2-sphinx
-BuildRequires:  python-sphinx_rtd_theme
+BuildRequires:  python2-sphinx_rtd_theme
+BuildRequires:  python2-sphinxcontrib-bibtex
+BuildRequires:  python-ipython-console
 BuildRequires:  python-numpydoc
-BuildRequires:  pydot
 %endif
+BuildRequires:  pydot
 BuildRequires:  tex(latex)
 BuildRequires:  tex-preview
 BuildRequires:  python-matplotlib
@@ -208,13 +207,9 @@ Documentation for networkx
 %patch1 -p1
 %patch2 -p1
 %endif
-%patch3 -p1
 
 # Fix permissions
-find examples -type f -perm /0111 | xargs chmod a-x
-
-# Avoid downloading the doc files while building
-cp -pf %{SOURCE1} %{SOURCE2} %{SOURCE3} doc/source
+find examples -type f -perm /0111 -exec chmod a-x {} +
 
 %build
 %py2_build
@@ -325,6 +320,10 @@ PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Sat Mar  5 2016 Jerry James <loganjerry@gmail.com> - 1.11-1
+- New upstream version
+- Drop upstreamed -numpy patch
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.10-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
