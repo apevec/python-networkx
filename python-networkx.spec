@@ -5,18 +5,11 @@
 %global with_gdal 1
 %endif
 
-# see https://fedoraproject.org/wiki/Packaging:Python#Macros
-%if 0%{?rhel} && 0%{?rhel} <= 6
-%{!?__python2: %global __python2 /usr/bin/python2}
-%{!?python2_sitelib: %global python2_sitelib %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python2_sitearch: %global python2_sitearch %(%{__python2} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
-
 %global srcname networkx
 
 Name:           python-%{srcname}
 Version:        1.11
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
@@ -90,10 +83,11 @@ This package provides GDAL I/O support.
 Summary:        visual representations for graphs and networks
 Requires:       python2-%{srcname}-core = %{version}-%{release}
 BuildRequires:  graphviz-python
-BuildRequires:  pydot
+BuildRequires:  python2-matplotlib
+BuildRequires:  python2-pydot
 Requires:       graphviz-python
-Requires:       pydot
-Requires:       python-matplotlib
+Requires:       python2-matplotlib
+Requires:       python2-pydot
 
 %{?python_provide:%python_provide python2-%{srcname}-drawing}
 
@@ -142,8 +136,8 @@ study of the structure, dynamics, and functions of complex networks.
 %package -n python3-%{srcname}-geo
 Summary:        GDAL I/O
 Requires:       python3-%{srcname}-core = %{version}-%{release}
-BuildRequires:  gdal-python
-Requires:       gdal-python
+BuildRequires:  gdal-python3
+Requires:       gdal-python3
 
 %{?python_provide:%python_provide python3-%{srcname}-geo}
 
@@ -157,11 +151,11 @@ This package provides GDAL I/O support.
 Summary:        visual representations for graphs and networks
 Requires:       python3-%{srcname}-core = %{version}-%{release}
 BuildRequires:  graphviz-python
-BuildRequires:  pydot
 BuildRequires:  python3-matplotlib
+BuildRequires:  python3-pydot
 Requires:       graphviz-python
-Requires:       pydot
 Requires:       python3-matplotlib
+Requires:       python3-pydot
 
 %{?python_provide:%python_provide python3-%{srcname}-drawing}
 
@@ -192,7 +186,7 @@ BuildRequires:  python-numpydoc
 BuildRequires:  pydot
 BuildRequires:  tex(latex)
 BuildRequires:  tex-preview
-BuildRequires:  python-matplotlib
+BuildRequires:  python2-matplotlib
 Provides:       bundled(jquery)
 
 
@@ -320,6 +314,9 @@ PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Sat Apr  2 2016 Jerry James <loganjerry@gmail.com> - 1.11-2
+- Fix gdal and pydot dependencies
+
 * Sat Mar  5 2016 Jerry James <loganjerry@gmail.com> - 1.11-1
 - New upstream version
 - Drop upstreamed -numpy patch
