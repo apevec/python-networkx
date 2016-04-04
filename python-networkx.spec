@@ -175,7 +175,7 @@ Summary:        Documentation for networkx
 %if 0%{?rhel} == 6
 BuildRequires:  python-sphinx10
 %else
-BuildRequires:  python2-pandas
+BuildRequires:  python-pandas
 BuildRequires:  python2-pydotplus
 BuildRequires:  python2-sphinx
 BuildRequires:  python2-sphinx_rtd_theme
