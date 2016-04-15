@@ -9,7 +9,7 @@
 
 Name:           python-%{srcname}
 Version:        1.11
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
@@ -84,10 +84,10 @@ Summary:        visual representations for graphs and networks
 Requires:       python2-%{srcname}-core = %{version}-%{release}
 BuildRequires:  graphviz-python
 BuildRequires:  python2-matplotlib
-BuildRequires:  python2-pydot
+BuildRequires:  python2-pydotplus
 Requires:       graphviz-python
 Requires:       python2-matplotlib
-Requires:       python2-pydot
+Requires:       python2-pydotplus
 
 %{?python_provide:%python_provide python2-%{srcname}-drawing}
 
@@ -152,10 +152,10 @@ Summary:        visual representations for graphs and networks
 Requires:       python3-%{srcname}-core = %{version}-%{release}
 BuildRequires:  graphviz-python
 BuildRequires:  python3-matplotlib
-BuildRequires:  python3-pydot
+BuildRequires:  python3-pydotplus
 Requires:       graphviz-python
 Requires:       python3-matplotlib
-Requires:       python3-pydot
+Requires:       python3-pydotplus
 
 %{?python_provide:%python_provide python3-%{srcname}-drawing}
 
@@ -183,7 +183,6 @@ BuildRequires:  python2-sphinxcontrib-bibtex
 BuildRequires:  python-ipython-console
 BuildRequires:  python-numpydoc
 %endif
-BuildRequires:  pydot
 BuildRequires:  tex(latex)
 BuildRequires:  tex-preview
 BuildRequires:  python2-matplotlib
@@ -314,6 +313,9 @@ PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Thu Apr 14 2016 Jerry James <loganjerry@gmail.com> - 1.11-3
+- Change pydot dependencies to pydotplus (bz 1326957)
+
 * Sat Apr  2 2016 Jerry James <loganjerry@gmail.com> - 1.11-2
 - Fix gdal and pydot dependencies
 
