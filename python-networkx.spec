@@ -9,7 +9,7 @@
 
 Name:           python-%{srcname}
 Version:        1.11
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
@@ -313,6 +313,9 @@ PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Tue Jul 19 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-4
+- https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
+
 * Thu Apr 14 2016 Jerry James <loganjerry@gmail.com> - 1.11-3
 - Change pydot dependencies to pydotplus (bz 1326957)
 
