@@ -17,6 +17,9 @@ Source0:        https://github.com/networkx/networkx/archive/%{srcname}-%{versio
 Patch0:         %{srcname}-optional-modules.patch
 Patch1:         %{srcname}-nose1.0.patch
 Patch2:         %{srcname}-skip-scipy-0.8-tests.patch
+# Fix sphinx build error
+# https://github.com/networkx/networkx/issues/2340
+Patch3:         python-networkx-sphinx.patch
 BuildArch:      noarch
 
 %description
@@ -200,6 +203,7 @@ Documentation for networkx
 %patch1 -p1
 %patch2 -p1
 %endif
+%patch3 -p1 -b .sphinx
 
 # Fix permissions
 find examples -type f -perm /0111 -exec chmod a-x {} +
@@ -313,6 +317,9 @@ PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Fri Dec 23 2016 Orion Poplawski <orion@cora.nwra.com> - 1.15-5
+- Add patch to fix sphinx build
+
 * Mon Dec 19 2016 Miro Hrončok <mhroncok@redhat.com> - 1.11-5
 - Rebuild for Python 3.6
 
