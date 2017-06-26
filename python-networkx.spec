@@ -320,7 +320,7 @@ PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.11-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
-* Fri Dec 23 2016 Orion Poplawski <orion@cora.nwra.com> - 1.15-5
+* Fri Dec 23 2016 Orion Poplawski <orion@cora.nwra.com> - 1.11-5
 - Add patch to fix sphinx build
 
 * Mon Dec 19 2016 Miro Hrončok <mhroncok@redhat.com> - 1.11-5
