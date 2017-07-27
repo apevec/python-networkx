@@ -9,7 +9,7 @@
 
 Name:           python-%{srcname}
 Version:        1.11
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
@@ -317,6 +317,9 @@ PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.11-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.11-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
