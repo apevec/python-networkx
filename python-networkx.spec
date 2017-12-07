@@ -1,7 +1,7 @@
-%if 0%{?fedora} || 0%{?rhel} >= 8
+%if 0%{?fedora} || 0%{?rhel} > 7
 %global with_python3 1
 %endif
-%if !0%{?rhel}
+%if 0%{?fedora} || 0%{?rhel} > 7
 %global with_gdal 1
 %endif
 
@@ -9,7 +9,7 @@
 
 Name:           python-%{srcname}
 Version:        1.11
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
@@ -317,6 +317,9 @@ PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Thu Dec 07 2017 Merlin Mathesius <mmathesi@redhat.com> - 1.11-8
+- Cleanup spec file conditionals
+
 * Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.11-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
