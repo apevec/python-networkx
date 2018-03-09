@@ -9,7 +9,7 @@
 
 Name:           python-%{srcname}
 Version:        1.11
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
@@ -47,7 +47,7 @@ BuildRequires:  python2-decorator
 BuildRequires:  python2-scipy
 BuildRequires:  python2-setuptools
 BuildRequires:  python2-yaml
-BuildRequires:  pyparsing
+BuildRequires:  python2-pyparsing
 %if 0%{?rhel} == 6
 BuildRequires:  python-nose1.1
 %else
@@ -56,7 +56,7 @@ BuildRequires:  python2-nose
 Requires:       python2-decorator
 Requires:       python2-scipy
 Requires:       python2-yaml
-Requires:       pyparsing
+Requires:       python2-pyparsing
 
 %{?python_provide:%python_provide python2-%{srcname}-core}
 
@@ -70,8 +70,8 @@ study of the structure, dynamics, and functions of complex networks.
 %package -n python2-%{srcname}-geo
 Summary:        GDAL I/O
 Requires:       python2-%{srcname}-core = %{version}-%{release}
-BuildRequires:  gdal-python
-Requires:       gdal-python
+BuildRequires:  python2-gdal
+Requires:       python2-gdal
 
 %{?python_provide:%python_provide python2-%{srcname}-geo}
 
@@ -85,10 +85,10 @@ This package provides GDAL I/O support.
 %package -n python2-%{srcname}-drawing
 Summary:        visual representations for graphs and networks
 Requires:       python2-%{srcname}-core = %{version}-%{release}
-BuildRequires:  graphviz-python
+BuildRequires:  python2-graphviz
 BuildRequires:  python2-matplotlib
 BuildRequires:  python2-pydotplus
-Requires:       graphviz-python
+Requires:       python2-graphviz
 Requires:       python2-matplotlib
 Requires:       python2-pydotplus
 
@@ -153,10 +153,10 @@ This package provides GDAL I/O support.
 %package -n python3-%{srcname}-drawing
 Summary:        visual representations for graphs and networks
 Requires:       python3-%{srcname}-core = %{version}-%{release}
-BuildRequires:  graphviz-python
+BuildRequires:  python2-graphviz
 BuildRequires:  python3-matplotlib
 BuildRequires:  python3-pydotplus
-Requires:       graphviz-python
+Requires:       python2-graphviz
 Requires:       python3-matplotlib
 Requires:       python3-pydotplus
 
@@ -178,13 +178,13 @@ Summary:        Documentation for networkx
 %if 0%{?rhel} == 6
 BuildRequires:  python-sphinx10
 %else
-BuildRequires:  python-pandas
+BuildRequires:  python2-pandas
 BuildRequires:  python2-pydotplus
 BuildRequires:  python2-sphinx
 BuildRequires:  python2-sphinx_rtd_theme
 BuildRequires:  python2-sphinxcontrib-bibtex
-BuildRequires:  python-ipython-console
-BuildRequires:  python-numpydoc
+BuildRequires:  python2-ipython
+BuildRequires:  python2-numpydoc
 %endif
 BuildRequires:  tex(latex)
 BuildRequires:  tex-preview
@@ -317,6 +317,10 @@ PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Fri Mar 09 2018 Iryna Shcherbina <ishcherb@redhat.com> - 1.11-10
+- Update Python 2 dependency declarations to new packaging standards
+  (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
+
 * Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.11-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
