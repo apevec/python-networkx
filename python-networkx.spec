@@ -9,7 +9,7 @@
 
 Name:           python-%{srcname}
 Version:        1.11
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
@@ -85,10 +85,10 @@ This package provides GDAL I/O support.
 %package -n python2-%{srcname}-drawing
 Summary:        visual representations for graphs and networks
 Requires:       python2-%{srcname}-core = %{version}-%{release}
-BuildRequires:  python2-graphviz
+BuildRequires:  python2.7dist(gv)
 BuildRequires:  python2-matplotlib
 BuildRequires:  python2-pydotplus
-Requires:       python2-graphviz
+Requires:       python2.7dist(gv)
 Requires:       python2-matplotlib
 Requires:       python2-pydotplus
 
@@ -153,10 +153,8 @@ This package provides GDAL I/O support.
 %package -n python3-%{srcname}-drawing
 Summary:        visual representations for graphs and networks
 Requires:       python3-%{srcname}-core = %{version}-%{release}
-BuildRequires:  python2-graphviz
 BuildRequires:  python3-matplotlib
 BuildRequires:  python3-pydotplus
-Requires:       python2-graphviz
 Requires:       python3-matplotlib
 Requires:       python3-pydotplus
 
@@ -317,6 +315,10 @@ PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
 
 
 %changelog
+* Fri May 18 2018 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 1.11-11
+- Update graphviz dependency for python2
+- Drop graphviz dependency for python3 (graphviz doesn't support python3)
+
 * Fri Mar 09 2018 Iryna Shcherbina <ishcherb@redhat.com> - 1.11-10
 - Update Python 2 dependency declarations to new packaging standards
   (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
