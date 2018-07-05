@@ -208,6 +208,7 @@ find examples -type f -perm /0111 -exec chmod a-x {} +
 
 %build
 %py2_build
+sed -i 's/^[[:blank:]]*python/&2/' doc/Makefile
 %if 0%{?rhel} == 6
 PYTHONPATH=$PWD/build/lib make SPHINXBUILD=sphinx-1.0-build -C doc html
 %else
@@ -263,7 +264,7 @@ rm -f /tmp/tmp??????
 %check
 mkdir site-packages
 mv networkx site-packages
-PYTHONPATH=$PWD/site-packages python -c "import networkx; networkx.test()"
+PYTHONPATH=$PWD/site-packages python2 -c "import networkx; networkx.test()"
 
 %files -n python2-%{srcname}
 %doc README.rst
