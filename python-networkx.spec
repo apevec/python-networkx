@@ -2,11 +2,13 @@
 
 Name:           python-%{srcname}
 Version:        2.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
 Source0:        https://github.com/networkx/networkx/archive/%{srcname}-%{version}.tar.gz
+# Import from collections.abc as necessary
+Patch0:         %{name}-abc.patch
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
@@ -84,7 +86,7 @@ Provides:       bundled(jquery)
 Documentation for networkx
 
 %prep
-%autosetup -n %{srcname}-%{srcname}-%{version}
+%autosetup -p0 -n %{srcname}-%{srcname}-%{version}
 
 # Do not use env
 for f in $(grep -FRl %{_bindir}/env .); do
@@ -128,6 +130,9 @@ rm -f installed-docs/INSTALL.txt
 %doc doc/build/html/*
 
 %changelog
+* Tue Oct 30 2018 Jerry James <loganjerry@gmail.com> - 2.2-2
+- Add -abc patch to quiet warnings
+
 * Sat Oct 13 2018 Jerry James <loganjerry@gmail.com> - 2.2-1
 - New upstream version (bz 1600361)
 - Drop all patches
