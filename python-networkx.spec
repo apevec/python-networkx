@@ -22,7 +22,7 @@ BuildArch:      noarch
 %if 0%{?with_python3}
 BuildRequires:  python3-devel
 BuildRequires:  python3dist(decorator)
-BuildRequires:  python3dist(gdal)
+#BuildRequires:  python3dist(gdal)
 BuildRequires:  python3dist(lxml)
 BuildRequires:  python3dist(matplotlib)
 BuildRequires:  python3dist(nose)
@@ -45,7 +45,7 @@ BuildRequires:  python3dist(sphinx-gallery)
 %else
 BuildRequires:  python2-devel
 BuildRequires:  python-decorator
-BuildRequires:  gdal-python
+#BuildRequires:  gdal-python
 BuildRequires:  python-lxml
 BuildRequires:  python2-matplotlib
 BuildRequires:  python2-nose
@@ -82,7 +82,7 @@ study of the structure, dynamics, and functions of complex networks.
 %package -n python3-%{srcname}
 Summary:        Creates and Manipulates Graphs and Networks
 Requires:       python3dist(decorator)
-Requires:       python3dist(gdal)
+#Requires:       python3dist(gdal)
 Requires:       python3dist(lxml)
 Requires:       python3dist(matplotlib)
 Requires:       python3dist(numpy)
@@ -120,7 +120,7 @@ study of the structure, dynamics, and functions of complex networks.
 %package -n python2-%{srcname}
 Summary:        Creates and Manipulates Graphs and Networks
 Requires:       python-decorator
-Requires:       gdal-python
+#Requires:       gdal-python
 Requires:       python-lxml
 Requires:       python2-matplotlib
 Requires:       python2-numpy
