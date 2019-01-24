@@ -1,3 +1,9 @@
+%if 0%{?fedora} || 0%{?rhel} > 7
+%global with_python3 1
+%endif
+
+%global with_doc 0
+
 %global srcname networkx
 
 Name:           python-%{srcname}
@@ -7,39 +13,72 @@ Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
 Source0:        https://github.com/networkx/networkx/archive/%{srcname}-%{version}.tar.gz
+%if 0%{?with_python3}
 # Import from collections.abc as necessary
 Patch0:         %{name}-abc.patch
+%endif
 BuildArch:      noarch
 
+%if 0%{?with_python3}
 BuildRequires:  python3-devel
 BuildRequires:  python3dist(decorator)
 BuildRequires:  python3dist(gdal)
 BuildRequires:  python3dist(lxml)
 BuildRequires:  python3dist(matplotlib)
-BuildRequires:  python3dist(nb2plots)
 BuildRequires:  python3dist(nose)
 BuildRequires:  python3dist(nose-ignore-docstring)
 BuildRequires:  python3dist(numpy)
-BuildRequires:  python3dist(numpydoc)
 BuildRequires:  python3dist(pandas)
-BuildRequires:  python3dist(pillow)
 BuildRequires:  python3dist(pydot)
 BuildRequires:  python3dist(pygraphviz)
 BuildRequires:  python3dist(pyyaml)
 BuildRequires:  python3dist(scipy)
 BuildRequires:  python3dist(setuptools)
+%if 0%{?with_doc}
+# documentation BRs
+BuildRequires:  python3dist(nb2plots)
+BuildRequires:  python3dist(numpydoc)
+BuildRequires:  python3dist(pillow)
 BuildRequires:  python3dist(sphinx)
 BuildRequires:  python3dist(sphinx-gallery)
+%endif
+%else
+BuildRequires:  python2-devel
+BuildRequires:  python-decorator
+BuildRequires:  gdal-python
+BuildRequires:  python-lxml
+BuildRequires:  python2-matplotlib
+BuildRequires:  python2-nose
+#BuildRequires:  python2-nose-ignore-docstring
+BuildRequires:  python2-numpy
+BuildRequires:  python2-pandas
+BuildRequires:  python2-pydot
+BuildRequires:  graphviz-python
+BuildRequires:  PyYAML
+BuildRequires:  python2-scipy
+BuildRequires:  python2-setuptools
+%if 0%{?with_doc}
+BuildRequires:  python2-nb2plots
+BuildRequires:  python2-numpydoc
+BuildRequires:  python2-pillow
+BuildRequires:  python2-sphinx
+BuildRequires:  python2-sphinx_gallery
+%endif
+%endif
+
 BuildRequires:  xdg-utils
 
+%if 0%{?with_doc}
 # Documentation
 BuildRequires:  tex(latex)
 BuildRequires:  tex-preview
+%endif
 
 %description
 NetworkX is a Python package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
 
+%if 0%{?with_python3}
 %package -n python3-%{srcname}
 Summary:        Creates and Manipulates Graphs and Networks
 Requires:       python3dist(decorator)
@@ -77,20 +116,58 @@ Provides:       python3-%{srcname}-drawing = %{version}-%{release}
 %description -n python3-%{srcname}
 NetworkX is a Python 3 package for the creation, manipulation, and
 study of the structure, dynamics, and functions of complex networks.
+%else
+%package -n python2-%{srcname}
+Summary:        Creates and Manipulates Graphs and Networks
+Requires:       python-decorator
+Requires:       gdal-python
+Requires:       python-lxml
+Requires:       python2-matplotlib
+Requires:       python2-numpy
+Requires:       python2-pandas
+Requires:       python2-pillow
+Requires:       python2-pydot
+Requires:       graphviz-python
+Requires:       python-pyparsing
+Requires:       PyYAML
+Requires:       python2-scipy
+Requires:       xdg-utils
 
+%{?python_provide:%python_provide python2-%{srcname}}
+
+Obsoletes:      python2-%{srcname}-core < 2.0
+Provides:       python2-%{srcname}-core = %{version}-%{release}
+Obsoletes:      python2-%{srcname}-geo < 2.0
+Provides:       python2-%{srcname}-geo = %{version}-%{release}
+Obsoletes:      python2-%{srcname}-drawing < 2.0
+Provides:       python2-%{srcname}-drawing = %{version}-%{release}
+
+%description -n python2-%{srcname}
+NetworkX is a Python 2 package for the creation, manipulation, and
+study of the structure, dynamics, and functions of complex networks.
+%endif
+
+%if 0%{?with_doc}
 %package doc
 Summary:        Documentation for networkx
 Provides:       bundled(jquery)
 
 %description doc
 Documentation for networkx
+%endif
 
 %prep
 %autosetup -p0 -n %{srcname}-%{srcname}-%{version}
 
+%if 0%{?with_python3}
+%global python_bin %{__python3}
+%else
+%global python_bin %{__python2}
+%endif
+
 # Do not use env
 for f in $(grep -FRl %{_bindir}/env .); do
-  sed -e 's,%{_bindir}/env python,%{__python3},' \
+  sed -e 's,%{_bindir}/env python,%{python_bin},' \
       -e 's,%{_bindir}/env ,%{_bindir},' \
       -i.orig $f
   touch -r $f.orig $f
@@ -104,13 +181,29 @@ sed -i "/expected_failing_examples/s|]|,'../examples/graph/plot_football.py','..
 rm -f examples/drawing/plot_unix_email.py
 
 %build
+%if 0%{?with_python3}
 %py3_build
+%else
+%py2_build
+%endif
 
+
+%if 0%{?with_doc}
+%if 0%{?with_python3}
+%global sphinx_build sphinx-build-3
+%else
+%global sphinx_build sphinx-build
+%endif
 # Build the documentation
-PYTHONPATH=$PWD/build/lib make SPHINXBUILD=sphinx-build-3 -C doc html
+PYTHONPATH=$PWD/build/lib make SPHINXBUILD=%{sphinx-build} -C doc html
+%endif
 
 %install
+%if 0%{?with_python3}
 %py3_install
+%else
+%py2_install
+%endif
 mv %{buildroot}%{_docdir}/networkx-%{version} ./installed-docs
 rm -f installed-docs/INSTALL.txt
 
@@ -121,13 +214,22 @@ rm -f installed-docs/INSTALL.txt
 #%%check
 #nosetests-3 -v
 
+%if 0%{?with_python3}
 %files -n python3-networkx
 %doc README.rst installed-docs/*
 %license LICENSE.txt
 %{python3_sitelib}/networkx*
+%else
+%files -n python2-networkx
+%doc README.rst installed-docs/*
+%license LICENSE.txt
+%{python2_sitelib}/networkx*
+%endif
 
+%if 0%{?with_doc}
 %files doc
 %doc doc/build/html/*
+%endif
 
 %changelog
 * Tue Oct 30 2018 Jerry James <loganjerry@gmail.com> - 2.2-2
