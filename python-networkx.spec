@@ -8,7 +8,7 @@
 
 Name:           python-%{srcname}
 Version:        2.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
 URL:            http://networkx.github.io/
@@ -135,10 +135,16 @@ Requires:       xdg-utils
 
 %{?python_provide:%python_provide python2-%{srcname}}
 
+Obsoletes:      python-%{srcname}-core < 2.0
+Provides:       python-%{srcname}-core = %{version}-%{release}
 Obsoletes:      python2-%{srcname}-core < 2.0
 Provides:       python2-%{srcname}-core = %{version}-%{release}
+Obsoletes:      python-%{srcname}-geo < 2.0
+Provides:       python-%{srcname}-geo = %{version}-%{release}
 Obsoletes:      python2-%{srcname}-geo < 2.0
 Provides:       python2-%{srcname}-geo = %{version}-%{release}
+Obsoletes:      python-%{srcname}-drawing < 2.0
+Provides:       python-%{srcname}-drawing = %{version}-%{release}
 Obsoletes:      python2-%{srcname}-drawing < 2.0
 Provides:       python2-%{srcname}-drawing = %{version}-%{release}
 
@@ -232,6 +238,9 @@ rm -f installed-docs/INSTALL.txt
 %endif
 
 %changelog
+* Fri Jan 25 2019 Alfredo Moralejo <amoralej@redhat.com> - 2.2-3
+- Fix upgrade path for CentOS/RDO.
+
 * Tue Oct 30 2018 Jerry James <loganjerry@gmail.com> - 2.2-2
 - Add -abc patch to quiet warnings
 
