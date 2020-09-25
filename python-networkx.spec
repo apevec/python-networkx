@@ -3,7 +3,7 @@
 %global srcname networkx
 
 Name:           python-%{srcname}
-Version:        2.4
+Version:        2.5
 Release:        1%{?dist}
 Summary:        Creates and Manipulates Graphs and Networks
 License:        BSD
@@ -146,6 +146,9 @@ rm -f installed-docs/INSTALL.txt
 %endif
 
 %changelog
+* Fri Sep 25 2020 Joel Capitao <jcapitao@redhat.com> - 2.5-1
+- Update to 2.5
+
 * Tue Sep 22 2020 Joel Capitao <jcapitao@redhat.com> - 2.4-1
 - Update to 2.4
 
